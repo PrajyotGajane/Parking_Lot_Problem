@@ -18,4 +18,15 @@ public class ParkingLotTest {
             }
 
       }
+
+      @Test
+      public void givenVehicle_WhenAlreadyParked_ShouldThrowCustomException() {
+            ParkingLot parkingLot = new ParkingLot();
+            try {
+                  parkingLot.parkedVehicle("GA-08-A-2323", "Prajyot");
+                  parkingLot.parkedVehicle("GA-08-A-2323", "Prajyot");
+            } catch (ParkingLotException e) {
+                  Assert.assertEquals(e.type, ParkingLotException.ExceptionType.ALREADY_PARKED);
+            }
+      }
 }
