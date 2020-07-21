@@ -1,7 +1,8 @@
-package com.bridgelabaz.ParkingLot.service;
+package com.bridgelabaz.ParkingLot.observer;
 
-public class Owner {
+public class Owner implements Observer{
       public boolean isParkingLotFull;
+      @Override
       public void parkingLotFull(boolean isParkingLotFUll) {
             this.isParkingLotFull = isParkingLotFUll;
       }
