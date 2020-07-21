@@ -13,4 +13,12 @@ public class ParkingLot {
             isVehicleParked.put(vehicleNumber, owner);
             return isVehicleParked.containsKey(vehicleNumber);
       }
+
+      public boolean unparkVehicle(String vehicleNumber) throws ParkingLotException {
+            if (!isVehicleParked.containsKey(vehicleNumber))
+                  throw new ParkingLotException("Vehicle not present in lot",
+                          ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT);
+            isVehicleParked.remove(vehicleNumber);
+            return isVehicleParked.containsKey(vehicleNumber);
+      }
 }
