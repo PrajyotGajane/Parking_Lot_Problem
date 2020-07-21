@@ -43,4 +43,13 @@ public class ParkingLotTest {
             boolean isUnParked = parkingLot.unparkVehicle("GA-08-A-2323");
             Assert.assertEquals(false, isUnParked);
       }
+
+      @Test
+      public void givenVehicleToUnPark_WhenNotPresent_ShouldThrowCustomException() {
+            try {
+                  parkingLot.unparkVehicle("GA-08-A-2323");
+            } catch (ParkingLotException e) {
+                  Assert.assertEquals(e.type, ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT);
+            }
+      }
 }
