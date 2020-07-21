@@ -35,14 +35,14 @@ public class ParkingLotTest {
       @Test
       public void givenVehicle_WhenUnparked_ShouldReturnTrue() throws ParkingLotException {
             parkingLot.parkedVehicle("GA-08-A-2323");
-            boolean isUnparked = parkingLot.unparkVehicle("GA-08-A-2323");
+            boolean isUnparked = parkingLot.unParkVehicle("GA-08-A-2323");
             Assert.assertEquals(false, isUnparked);
       }
 
       @Test
       public void givenVehicleToUnpark_WhenNotPresent_ShouldThrowCustomException() {
             try {
-                  parkingLot.unparkVehicle("GA-08-A-2323");
+                  parkingLot.unParkVehicle("GA-08-A-2323");
             } catch (ParkingLotException e) {
                   Assert.assertEquals(e.type, ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT);
             }
@@ -50,7 +50,7 @@ public class ParkingLotTest {
 
       @Test
       public void givenParkingLotWithSize_WhenFull_ShouldInformOwnerAndReturnTrue() {
-            parkingLot.parkinLotSize(3);
+            parkingLot.parkingLotSize(3);
             try {
                   parkingLot.parkedVehicle("GA-08-A-2323");
                   parkingLot.parkedVehicle("MH-08-A-3455");
@@ -59,5 +59,25 @@ public class ParkingLotTest {
             } catch (ParkingLotException e) {
                   Assert.assertEquals(e.type, ParkingLotException.ExceptionType.PARKING_LOT_FULL);
             }
+      }
+
+      @Test
+      public void givenParkingLotWithSize_WhenFullInformOwner_ShouldInformOwnerAndReturnTrue() throws ParkingLotException {
+            parkingLot.parkingLotSize(3);
+            parkingLot.parkedVehicle("GA-08-A-2323");
+            parkingLot.parkedVehicle("MH-08-A-3455");
+            parkingLot.parkedVehicle("GJ-08-A-4567");
+            boolean informedOwner = parkingLot.owner.isParkingLotFUll();
+            Assert.assertTrue(informedOwner);
+      }
+
+      @Test
+      public void givenParkingLotWithSize_WhenFullInformAirportSecurity_ShouldInformOwnerAndReturnTrue() throws ParkingLotException {
+            parkingLot.parkingLotSize(3);
+            parkingLot.parkedVehicle("GA-08-A-2323");
+            parkingLot.parkedVehicle("MH-08-A-3455");
+            parkingLot.parkedVehicle("GJ-08-A-4567");
+            boolean informedAirportSecurity = parkingLot.airportSecurity.isParkingLotFull();
+            Assert.assertTrue(informedAirportSecurity);
       }
 }
