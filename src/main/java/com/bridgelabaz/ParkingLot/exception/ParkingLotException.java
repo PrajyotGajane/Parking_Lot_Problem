@@ -4,7 +4,7 @@ public class ParkingLotException extends Exception {
       public ExceptionType type;
 
       public enum ExceptionType {
-            ALREADY_PARKED, VEHICLE_NOT_PRESENT
+            ALREADY_PARKED, VEHICLE_NOT_PRESENT, PARKING_LOT_FULL
       }
 
       public ParkingLotException(String message, ExceptionType type) {
