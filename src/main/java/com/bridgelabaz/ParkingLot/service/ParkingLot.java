@@ -83,11 +83,14 @@ public class ParkingLot {
       }
 
       public int vehicleSpotInLot(String vehicleNumber) throws ParkingLotException {
-            int spot = parkingSpotMap.keySet()
-                    .stream()
-                    .filter(key -> vehicleNumber.equals(parkingSpotMap.get(key)))
-                    .findFirst().get();
-            this.unParkVehicle(vehicleNumber);
-            return spot;
+            if (parkingSpotMap.containsValue(vehicleNumber)) {
+                 int spot = parkingSpotMap.keySet()
+                          .stream()
+                          .filter(key -> vehicleNumber.equals(parkingSpotMap.get(key)))
+                          .findFirst().get();
+                  return spot;
+            }
+            throw new ParkingLotException("Vehicle not present in lot",
+                    ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT);
       }
 }
