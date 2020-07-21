@@ -144,4 +144,17 @@ public class ParkingLotTest {
                   Assert.assertEquals(ParkingLotException.ExceptionType.SLOT_NOT_EMPTY, e.type);
             }
       }
+
+      @Test
+      public void givenParkedVehicle_WhenFound_ShouldReturnSpotInParkingLot() {
+            try {
+                  parkingLot.parkedVehicle("GA-08-A-2323");
+                  parkingLot.parkedVehicle("GJ-08-A-4567");
+                  parkingLot.parkedVehicle("MH-08-A-4567");
+                  int position = parkingLot.vehicleSpotInLot("MH-08-A-4567");
+                  Assert.assertEquals(2, position);
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
+      }
 }

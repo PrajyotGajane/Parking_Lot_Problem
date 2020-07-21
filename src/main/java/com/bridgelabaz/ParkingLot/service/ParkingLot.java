@@ -81,4 +81,13 @@ public class ParkingLot {
                           ParkingLotException.ExceptionType.SLOT_NOT_EMPTY);
             parkingSpotMap.put(slot, vehicle);
       }
+
+      public int vehicleSpotInLot(String vehicleNumber) throws ParkingLotException {
+            int spot = parkingSpotMap.keySet()
+                    .stream()
+                    .filter(key -> vehicleNumber.equals(parkingSpotMap.get(key)))
+                    .findFirst().get();
+            this.unParkVehicle(vehicleNumber);
+            return spot;
+      }
 }
