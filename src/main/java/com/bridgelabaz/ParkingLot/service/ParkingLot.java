@@ -2,7 +2,6 @@ package com.bridgelabaz.ParkingLot.service;
 
 import com.bridgelabaz.ParkingLot.exception.ParkingLotException;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 public class ParkingLot {
@@ -10,11 +9,14 @@ public class ParkingLot {
       private int sizeOfParkingLot = 10;
       public Owner owner = new Owner();
       public AirportSecurity airportSecurity = new AirportSecurity();
-      public boolean isVehiclePresent(String vehicleNumber){
+
+      public boolean isVehiclePresent(String vehicleNumber) {
             return isVehicleParked.contains(vehicleNumber);
       }
 
       public void parkedVehicle(String vehicleNumber) throws ParkingLotException {
+            if (vehicleNumber == null)
+                  throw new ParkingLotException("Invalid Vehicle", ParkingLotException.ExceptionType.INVALID_VEHICLE);
             if (isVehicleParked.contains(vehicleNumber))
                   throw new ParkingLotException("Already Parked", ParkingLotException.ExceptionType.ALREADY_PARKED);
             if (isVehicleParked.size() == sizeOfParkingLot)
@@ -26,12 +28,12 @@ public class ParkingLot {
             }
       }
 
-      public boolean unParkVehicle(String vehicleNumber) throws ParkingLotException {
+      public void unParkVehicle(String vehicleNumber) throws ParkingLotException {
             if (!isVehicleParked.contains(vehicleNumber))
                   throw new ParkingLotException("Vehicle not present in lot",
                           ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT);
             isVehicleParked.remove(vehicleNumber);
-            return isVehicleParked.contains(vehicleNumber);
+            owner.parkingLotFull(false);
       }
 
       public void parkingLotSize(int size) {

@@ -1,11 +1,11 @@
 package com.bridgelabaz.ParkingLot.service;
 
 public class Owner {
-      public boolean isParkingLotFUll;
+      public boolean isParkingLotFull;
       public void parkingLotFull(boolean isParkingLotFUll) {
-            this.isParkingLotFUll = isParkingLotFUll;
+            this.isParkingLotFull = isParkingLotFUll;
       }
-      public boolean isParkingLotFUll() {
-            return isParkingLotFUll;
+      public boolean isParkingLotFull() {
+            return isParkingLotFull;
       }
 }
