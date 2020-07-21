@@ -134,4 +134,14 @@ public class ParkingLotTest {
                   e.printStackTrace();
             }
       }
+
+      @Test
+      public void givenVehicle_WhenOwnerProvidesSlot_IfVehicleAlreadyPresentOnSlot_ShouldThrowException() {
+            try {
+                  parkingLot.parkedVehicle("GJ-08-A-4567");
+                  parkingLot.parkAtOwnerProvidedSlot(0, "GA-08-A-2323");
+            } catch (ParkingLotException e) {
+                  Assert.assertEquals(ParkingLotException.ExceptionType.SLOT_NOT_EMPTY, e.type);
+            }
+      }
 }
