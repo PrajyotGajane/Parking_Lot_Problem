@@ -8,6 +8,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.time.LocalTime;
+
 public class ParkingLotTest {
       ParkingLot parkingLot;
 
@@ -98,10 +100,10 @@ public class ParkingLotTest {
       public void givenParkingLotWithSize_WhenFullInformAirportSecurity_ShouldInformOwnerAndReturnTrue() {
             parkingLot.parkingLotSize(3);
             try {
-                  parkingLot.parkedVehicle("Prajyot");
-                  parkingLot.parkedVehicle("saiprasad");
-                  parkingLot.parkedVehicle("anubhav");
-                  parkingLot.unParkVehicle("saiprasad");
+                  parkingLot.parkedVehicle("GA-08-A-2323");
+                  parkingLot.parkedVehicle("MH-08-A-3455");
+                  parkingLot.parkedVehicle("AP-08-A-4557");
+                  parkingLot.unParkVehicle("MH-08-A-3455");
                   parkingLot.parkedVehicle("GJ-08-A-4544");
                   boolean informedAirportSecurity = parkingLot.airportSecurity.isParkingLotFull();
                   Assert.assertTrue(informedAirportSecurity);
@@ -151,7 +153,7 @@ public class ParkingLotTest {
                   parkingLot.parkedVehicle("MH-08-A-4567");
                   parkingLot.parkedVehicle("GA-08-A-2323");
                   parkingLot.parkedVehicle("GJ-08-A-4567");
-                  int position = parkingLot.vehicleSpotInLot("MH-08-A-4567");
+                  int position = parkingLot.getVehicleSpot("GJ-08-A-4567");
                   Assert.assertEquals(2, position);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
@@ -164,6 +166,22 @@ public class ParkingLotTest {
                   parkingLot.vehicleSpotInLot("MH-08-A-4567");
             } catch (ParkingLotException e) {
                   Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT, e.type);
+            }
+      }
+
+      @Test
+      public void givenVehicle_WhenTimeAllotted_ShouldReturnParkingTime() {
+            try {
+                  LocalTime testTime = LocalTime.now().withNano(0);
+                  parkingLot.parkedVehicle("AP-08-A-4557");
+                  Thread.sleep(10000);
+                  parkingLot.parkedVehicle("MH-08-A-4567");
+                  LocalTime parkedTime = parkingLot.getParkTime("AP-08-A-4557");
+                  LocalTime parkedTime2 = parkingLot.getParkTime("MH-08-A-4567");
+                  System.out.println(parkedTime + " ------- " + parkedTime2);
+                  Assert.assertEquals(testTime, parkedTime);
+            } catch (ParkingLotException | InterruptedException e) {
+                  e.printStackTrace();
             }
       }
 }
