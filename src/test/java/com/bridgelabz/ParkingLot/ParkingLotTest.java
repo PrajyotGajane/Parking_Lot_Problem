@@ -174,13 +174,9 @@ public class ParkingLotTest {
             try {
                   LocalTime testTime = LocalTime.now().withNano(0);
                   parkingLot.parkedVehicle("AP-08-A-4557");
-                  Thread.sleep(10000);
-                  parkingLot.parkedVehicle("MH-08-A-4567");
                   LocalTime parkedTime = parkingLot.getParkTime("AP-08-A-4557");
-                  LocalTime parkedTime2 = parkingLot.getParkTime("MH-08-A-4567");
-                  System.out.println(parkedTime + " ------- " + parkedTime2);
                   Assert.assertEquals(testTime, parkedTime);
-            } catch (ParkingLotException | InterruptedException e) {
+            } catch (ParkingLotException e) {
                   e.printStackTrace();
             }
       }
