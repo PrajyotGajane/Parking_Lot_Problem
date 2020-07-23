@@ -1,4 +1,4 @@
-package com.bridgelabaz.ParkingLot.exception;
+package com.bridgelabaz.parkinglot.exception;
 
 public class ParkingLotException extends Exception {
       public ExceptionType type;

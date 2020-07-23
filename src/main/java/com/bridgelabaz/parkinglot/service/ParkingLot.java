@@ -1,17 +1,16 @@
-package com.bridgelabaz.ParkingLot.service;
+package com.bridgelabaz.parkinglot.service;
 
-import com.bridgelabaz.ParkingLot.exception.ParkingLotException;
-import com.bridgelabaz.ParkingLot.models.Slot;
-import com.bridgelabaz.ParkingLot.observer.AirportSecurity;
-import com.bridgelabaz.ParkingLot.observer.Observer;
-import com.bridgelabaz.ParkingLot.observer.Owner;
+import com.bridgelabaz.parkinglot.exception.ParkingLotException;
+import com.bridgelabaz.parkinglot.utility.Slot;
+import com.bridgelabaz.parkinglot.observer.AirportSecurity;
+import com.bridgelabaz.parkinglot.observer.Observer;
+import com.bridgelabaz.parkinglot.observer.Owner;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.IntStream;
 
 public class ParkingLot {
       private HashMap<Integer, Slot> parkingSpotMap = new HashMap<>();
@@ -19,53 +18,53 @@ public class ParkingLot {
       public Owner owner;
       public AirportSecurity airportSecurity;
       List<Observer> observerList = new ArrayList<>();
-      private LocalTime parkTime;
-      public Slot slotReference;
 
       public ParkingLot(Owner owner, AirportSecurity airportSecurity) {
             this.owner = owner;
             this.airportSecurity = airportSecurity;
             this.observerList.add(owner);
             this.observerList.add(airportSecurity);
-            this.parkTime = LocalTime.now().withNano(0);
-            this.slotReference = new Slot();
       }
 
       public boolean isVehiclePresent(String vehicleNumber) {
-            return parkingSpotMap.containsValue(vehicleNumber);
+            return parkingSpotMap.entrySet()
+                    .stream()
+                    .filter(entry -> entry.getValue() != null)
+                    .anyMatch(entry -> entry.getValue().getVehicle().equals(vehicleNumber));
       }
 
-      public void parkedVehicle(String vehicleNumber) throws ParkingLotException {
+      public void parkVehicle(String vehicleNumber) throws ParkingLotException {
             if (vehicleNumber == null)
                   throw new ParkingLotException("Invalid Vehicle", ParkingLotException.ExceptionType.INVALID_VEHICLE);
             if (parkingSpotMap.containsValue(vehicleNumber))
                   throw new ParkingLotException("Already Parked", ParkingLotException.ExceptionType.ALREADY_PARKED);
             if (parkingSpotMap.size() > sizeOfParkingLot)
                   throw new ParkingLotException("Parking Lot Full", ParkingLotException.ExceptionType.PARKING_LOT_FULL);
-            parkingSpotMap.put(getSpot(), new Slot(getSpot(), vehicleNumber));
-
+            parkingSpotMap.put(getSpot(), new Slot(getSpot(), vehicleNumber, LocalTime.now().withNano(0)));
             if (parkingSpotMap.size() == sizeOfParkingLot) {
                   notifyAllObservers(true);
             }
       }
 
       private Integer getSpot() {
-            return IntStream.rangeClosed(0, parkingSpotMap.size()).filter(slot -> parkingSpotMap.get(slot) == null).findFirst().orElse(-1);
+            for (int slot = 0; slot <= parkingSpotMap.size(); slot++) {
+                  if (parkingSpotMap.get(slot) == null)
+                        return slot;
+            }
+            return null;
       }
 
       public void notifyAllObservers(boolean status) {
-            for (Observer observer : observerList) {
-                  observer.parkingLotFull(status);
-            }
+            observerList.forEach(observer -> observer.parkingLotFull(status));
       }
 
       public void unParkVehicle(String vehicleNumber) throws ParkingLotException {
             Integer key = null;
-            if (!parkingSpotMap.containsValue(vehicleNumber))
+            if (!parkingSpotMap.containsValue(vehicleSpotInLot(vehicleNumber)))
                   throw new ParkingLotException("Vehicle not present in lot",
                           ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT);
             for (Map.Entry<Integer, Slot> entry : parkingSpotMap.entrySet()) {
-                  if (entry.getValue().equals(vehicleNumber)) {
+                  if (entry.getValue().equals(vehicleSpotInLot(vehicleNumber))) {
                         key = entry.getKey();
                   }
             }
@@ -86,7 +85,7 @@ public class ParkingLot {
             if (parkingSpotMap.get(slot) != null)
                   throw new ParkingLotException("Slot not empty",
                           ParkingLotException.ExceptionType.SLOT_NOT_EMPTY);
-            parkingSpotMap.put(slot, new Slot(slot, vehicle));
+            parkingSpotMap.put(slot, new Slot(slot, vehicle, LocalTime.now().withNano(0)));
       }
 
       public Slot vehicleSpotInLot(String vehicleNumber) throws ParkingLotException {
@@ -94,7 +93,8 @@ public class ParkingLot {
                     .stream()
                     .filter(slot -> vehicleNumber.equals(slot.getVehicle()))
                     .findFirst()
-                    .orElseThrow(() -> new ParkingLotException("", ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT));
+                    .orElseThrow(() -> new ParkingLotException(" Vehicle not present in lot",
+                            ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT));
       }
 
       public int getVehicleSpot(String vehicleNumber) throws ParkingLotException {

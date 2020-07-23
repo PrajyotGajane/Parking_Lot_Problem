@@ -1,4 +1,4 @@
-package com.bridgelabaz.ParkingLot.observer;
+package com.bridgelabaz.parkinglot.observer;
 
 public class AirportSecurity implements Observer {
       public boolean isParkingLotFull;

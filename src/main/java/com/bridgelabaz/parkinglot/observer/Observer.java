@@ -1,4 +1,4 @@
-package com.bridgelabaz.ParkingLot.observer;
+package com.bridgelabaz.parkinglot.observer;
 
 public interface Observer {
       void parkingLotFull(boolean isParkingLotFull);

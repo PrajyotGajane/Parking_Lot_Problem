@@ -1,4 +1,4 @@
-package com.bridgelabaz.ParkingLot.observer;
+package com.bridgelabaz.parkinglot.observer;
 
 public class Owner implements Observer {
       public boolean isParkingLotFull;

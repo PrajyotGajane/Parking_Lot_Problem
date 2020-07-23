@@ -1,19 +1,16 @@
-package com.bridgelabaz.ParkingLot.models;
+package com.bridgelabaz.parkinglot.utility;
 
 import java.time.LocalTime;
 
 public class Slot {
       public String vehicle;
-      public LocalTime time = LocalTime.now().withNano(0);
+      public LocalTime time;
       public int slot;
 
-      public Slot(int slot, String vehicle) {
+      public Slot(int slot, String vehicle, LocalTime time) {
             this.vehicle = vehicle;
-            System.out.println(time);
             this.slot = slot;
-      }
-
-      public Slot() {
+            this.time = time;
       }
 
       public int getSlot() {
