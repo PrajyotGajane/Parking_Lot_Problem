@@ -201,7 +201,7 @@ public class ParkingLotTest {
                   parkingService.parkCar("GA-08-A-4348");
                   parkingService.parkCar("GA-08-A-9767");
                   int parkedLotNumber = parkingService.getCarLocation("GA-08-A-9767");
-                  Assert.assertEquals(1,parkedLotNumber);
+                  Assert.assertEquals(1, parkedLotNumber);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }
@@ -217,6 +217,27 @@ public class ParkingLotTest {
                   Assert.assertFalse(isVehiclePresent);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
+            }
+      }
+
+      @Test
+      public void givenVehicle_WhenNotInLotButUnParked_ShouldReturnThrowException() {
+            ParkingLotService parkingService = new ParkingLotService(1, 1);
+            try {
+                  parkingService.unParkCar("GA-08-A-4348");
+            } catch (ParkingLotException e) {
+                  Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT, e.type);
+            }
+      }
+
+      @Test
+      public void givenVehicle_WhenAlreadyPresentInOneOfTheLots_ShouldThrowException() {
+            ParkingLotService parkingService = new ParkingLotService(1, 1);
+            try {
+                  parkingService.parkCar("GA-08-A-4348");
+                  parkingService.parkCar("GA-08-A-4348");
+            } catch (ParkingLotException e) {
+                  Assert.assertEquals(ParkingLotException.ExceptionType.ALREADY_PARKED, e.type);
             }
       }
 }
