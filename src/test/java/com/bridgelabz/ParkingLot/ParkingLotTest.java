@@ -4,6 +4,7 @@ import com.bridgelabaz.parkinglot.exception.ParkingLotException;
 import com.bridgelabaz.parkinglot.observer.AirportSecurity;
 import com.bridgelabaz.parkinglot.observer.Owner;
 import com.bridgelabaz.parkinglot.service.ParkingLot;
+import com.bridgelabaz.parkinglot.service.ParkingLotService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +16,7 @@ public class ParkingLotTest {
 
       @Before
       public void setUp() {
-            parkingLot = new ParkingLot(new Owner(), new AirportSecurity());
+            parkingLot = new ParkingLot(5, new Owner(), new AirportSecurity());
       }
 
       @Test
@@ -71,7 +72,7 @@ public class ParkingLotTest {
 
       @Test
       public void givenParkingLotWithSize_WhenFull_ShouldInformOwnerAndReturnTrue() {
-            parkingLot.parkingLotSize(3);
+            parkingLot = new ParkingLot(3, new Owner(), new AirportSecurity());
             try {
                   parkingLot.parkVehicle("GA-08-A-2323");
                   parkingLot.parkVehicle("MH-08-A-3455");
@@ -84,7 +85,7 @@ public class ParkingLotTest {
 
       @Test
       public void givenParkingLotWithSize_WhenFullInformOwner_ShouldInformOwnerAndReturnTrue() {
-            parkingLot.parkingLotSize(3);
+            parkingLot = new ParkingLot(3, new Owner(), new AirportSecurity());
             try {
                   parkingLot.parkVehicle("GA-08-A-2323");
                   parkingLot.parkVehicle("MH-08-A-3455");
@@ -98,7 +99,7 @@ public class ParkingLotTest {
 
       @Test
       public void givenParkingLotWithSize_WhenFullInformAirportSecurity_ShouldInformOwnerAndReturnTrue() {
-            parkingLot.parkingLotSize(3);
+            parkingLot = new ParkingLot(3, new Owner(), new AirportSecurity());
             try {
                   parkingLot.parkVehicle("GA-08-A-2323");
                   parkingLot.parkVehicle("MH-08-A-3455");
@@ -114,7 +115,7 @@ public class ParkingLotTest {
 
       @Test
       public void givenParkingLotWithExactSize_WhenSpaceAvailableInformOwner_ShouldInformOwnerAndReturnTrue() {
-            parkingLot.parkingLotSize(2);
+            parkingLot = new ParkingLot(2, new Owner(), new AirportSecurity());
             try {
                   parkingLot.parkVehicle("GA-08-A-2323");
                   parkingLot.parkVehicle("GJ-08-A-4567");
@@ -179,5 +180,18 @@ public class ParkingLotTest {
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }
+      }
+
+      @Test
+      public void givenVehicle_WhenParkedInLot_ShouldReturnTrue() {
+            ParkingLotService parkingService = new ParkingLotService(5, 3);
+            try {
+                  parkingService.parkCar("GA-08-A-4348");
+                  boolean isVehiclePresent = parkingService.isVehiclePresent("GA-08-A-4348");
+                  Assert.assertTrue(isVehiclePresent);
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
+
       }
 }

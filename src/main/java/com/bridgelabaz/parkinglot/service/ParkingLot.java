@@ -14,12 +14,14 @@ import java.util.Map;
 
 public class ParkingLot {
       private HashMap<Integer, Slot> parkingSpotMap = new HashMap<>();
-      private int sizeOfParkingLot = 10;
+      private int sizeOfParkingLot;
       public Owner owner;
       public AirportSecurity airportSecurity;
       List<Observer> observerList = new ArrayList<>();
+      int carsParkedInLot = 0;
 
-      public ParkingLot(Owner owner, AirportSecurity airportSecurity) {
+      public ParkingLot(int sizeOfParkingLot,Owner owner, AirportSecurity airportSecurity) {
+            this.sizeOfParkingLot = sizeOfParkingLot;
             this.owner = owner;
             this.airportSecurity = airportSecurity;
             this.observerList.add(owner);
@@ -41,6 +43,7 @@ public class ParkingLot {
             if (parkingSpotMap.size() > sizeOfParkingLot)
                   throw new ParkingLotException("Parking Lot Full", ParkingLotException.ExceptionType.PARKING_LOT_FULL);
             parkingSpotMap.put(getSpot(), new Slot(getSpot(), vehicleNumber, LocalTime.now().withNano(0)));
+            carsParkedInLot++;
             if (parkingSpotMap.size() == sizeOfParkingLot) {
                   notifyAllObservers(true);
             }
@@ -69,11 +72,8 @@ public class ParkingLot {
                   }
             }
             parkingSpotMap.put(key, null);
+            carsParkedInLot--;
             notifyAllObservers(false);
-      }
-
-      public void parkingLotSize(int size) {
-            this.sizeOfParkingLot = size;
       }
 
       public void parkAtOwnerProvidedSlot(int slot, String vehicle) throws ParkingLotException {
@@ -86,6 +86,7 @@ public class ParkingLot {
                   throw new ParkingLotException("Slot not empty",
                           ParkingLotException.ExceptionType.SLOT_NOT_EMPTY);
             parkingSpotMap.put(slot, new Slot(slot, vehicle, LocalTime.now().withNano(0)));
+            carsParkedInLot++;
       }
 
       public Slot vehicleSpotInLot(String vehicleNumber) throws ParkingLotException {
@@ -103,5 +104,9 @@ public class ParkingLot {
 
       public LocalTime getParkTime(String vehicleNumber) throws ParkingLotException {
             return vehicleSpotInLot(vehicleNumber).getTime();
+      }
+
+      public int getCarCount() {
+            return carsParkedInLot;
       }
 }
