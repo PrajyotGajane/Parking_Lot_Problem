@@ -262,4 +262,23 @@ public class ParkingLotTest {
                   Assert.assertEquals(ParkingLotException.ExceptionType.ALREADY_PARKED, e.type);
             }
       }
+
+      @Test
+      public void givenVehicle_WhenParkedInLot_ShouldReturnVehicleSlotInLot() {
+            ParkingLotService parkingService = new ParkingLotService(3, 2);
+            try {
+                  parkingService.parkCar("GA-08-A-4348");//parked in first lot
+                  parkingService.parkCar("MH-08-A-4349");//parked in second lot
+                  parkingService.parkCar("KA-08-A-4350");//parked in third lot
+                  //should start from first lot
+                  parkingService.parkCar("BR-08-A-4351");
+                  parkingService.parkCar("AP-08-A-4348");
+                  parkingService.parkCar("GJ-08-A-4348");
+                  Location location = parkingService.getLocation("GA-08-A-4348");
+                  int vehicleSlotInLot = location.getSlotNumber();
+                  Assert.assertEquals(0,vehicleSlotInLot);
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
+      }
 }
