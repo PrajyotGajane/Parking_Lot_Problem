@@ -5,6 +5,7 @@ import com.bridgelabaz.parkinglot.observer.AirportSecurity;
 import com.bridgelabaz.parkinglot.observer.Owner;
 import com.bridgelabaz.parkinglot.service.ParkingLot;
 import com.bridgelabaz.parkinglot.service.ParkingLotService;
+import com.bridgelabaz.parkinglot.utility.Location;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -197,11 +198,12 @@ public class ParkingLotTest {
       @Test
       public void givenVehicle_WhenParkedInLot_ShouldReturnLotAndSpotInLot() {
             ParkingLotService parkingService = new ParkingLotService(3, 3);
+            ParkingLot parkedLotReference = parkingService.numberOFParkingLots.get(1);
             try {
                   parkingService.parkCar("GA-08-A-4348");
                   parkingService.parkCar("GA-08-A-9767");
-                  int parkedLotNumber = parkingService.getCarLocation("GA-08-A-9767");
-                  Assert.assertEquals(1, parkedLotNumber);
+                  ParkingLot parkedLot = parkingService.getVehicleLocation("GA-08-A-9767");
+                  Assert.assertEquals(parkedLotReference, parkedLot);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }
@@ -213,6 +215,7 @@ public class ParkingLotTest {
             try {
                   parkingService.parkCar("GA-08-A-4348");
                   parkingService.unParkCar("GA-08-A-4348");
+
                   boolean isVehiclePresent = parkingService.isVehiclePresent("GA-08-A-4348");
                   Assert.assertFalse(isVehiclePresent);
             } catch (ParkingLotException e) {
@@ -236,6 +239,25 @@ public class ParkingLotTest {
             try {
                   parkingService.parkCar("GA-08-A-4348");
                   parkingService.parkCar("GA-08-A-4348");
+            } catch (ParkingLotException e) {
+                  Assert.assertEquals(ParkingLotException.ExceptionType.ALREADY_PARKED, e.type);
+            }
+      }
+
+      @Test
+      public void givenVehicle_WhenParkedInLots_ShouldBeDistributedEvenly() {
+            ParkingLotService parkingService = new ParkingLotService(3, 2);
+            ParkingLot parkedLotReference = parkingService.numberOFParkingLots.get(0);
+            try {
+                  parkingService.parkCar("GA-08-A-4348");//parked in first lot
+                  parkingService.parkCar("MH-08-A-4349");//parked in second lot
+                  parkingService.parkCar("KA-08-A-4350");//parked in third lot
+                  //should start from first lot
+                  parkingService.parkCar("BR-08-A-4351");
+                  parkingService.parkCar("AP-08-A-4348");
+                  parkingService.parkCar("GJ-08-A-4348");
+                  ParkingLot parkedLot = parkingService.getVehicleLocation("BR-08-A-4351");
+                  Assert.assertEquals(parkedLotReference,parkedLot);
             } catch (ParkingLotException e) {
                   Assert.assertEquals(ParkingLotException.ExceptionType.ALREADY_PARKED, e.type);
             }

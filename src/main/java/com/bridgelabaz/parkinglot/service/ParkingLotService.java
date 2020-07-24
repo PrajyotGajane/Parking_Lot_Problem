@@ -3,16 +3,16 @@ package com.bridgelabaz.parkinglot.service;
 import com.bridgelabaz.parkinglot.exception.ParkingLotException;
 import com.bridgelabaz.parkinglot.observer.AirportSecurity;
 import com.bridgelabaz.parkinglot.observer.Owner;
+import com.bridgelabaz.parkinglot.utility.Location;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
 
 public class ParkingLotService {
-      private int givenParkingLots;
-      private int givenParkingLotSLots;
+      private final int givenParkingLots;
+      private final int givenParkingLotSLots;
       public ArrayList<ParkingLot> numberOFParkingLots;
 
       public ParkingLotService(int givenParkingLots, int givenParkingLotSLots) {
@@ -25,8 +25,7 @@ public class ParkingLotService {
 
       public void parkCar(String vehicleNumber) throws ParkingLotException {
             boolean isVehiclePresent;
-            for (Iterator<ParkingLot> iterator = numberOFParkingLots.iterator(); iterator.hasNext(); ) {
-                  ParkingLot lots = iterator.next();
+            for (ParkingLot lots : numberOFParkingLots) {
                   isVehiclePresent = lots.isVehiclePresent(vehicleNumber);
                   if (isVehiclePresent)
                         throw new ParkingLotException("Already Parked",
@@ -37,7 +36,7 @@ public class ParkingLotService {
       }
 
       public void unParkCar(String vehicleNumber) throws ParkingLotException {
-            ParkingLot lot = getLotToUnPark();
+            ParkingLot lot = getLotToPark();
             lot.unParkVehicle(vehicleNumber);
       }
 
@@ -53,24 +52,23 @@ public class ParkingLotService {
             return parkingLot;
       }
 
-      private ParkingLot getLotToUnPark() {
-            ParkingLot parkingLot;
-            List<ParkingLot> selectLot = new ArrayList<>(this.numberOFParkingLots);
-            selectLot.sort(Comparator.comparing(ParkingLot::getCarCount));
-            parkingLot = selectLot.get(0);
-            return parkingLot;
-      }
-
       public boolean isVehiclePresent(String carNumber) {
             return this.numberOFParkingLots.stream().anyMatch(lot -> lot.isVehiclePresent(carNumber));
       }
 
-      public int getCarLocation(String carNumber) throws ParkingLotException {
-            ParkingLot parkingLot = this.numberOFParkingLots.stream()
-                    .filter(lot -> lot.isVehiclePresent(carNumber))
+      public ParkingLot getVehicleLocation(String vehicleNumber) throws ParkingLotException {
+            return this.numberOFParkingLots.stream()
+                    .filter(lot -> lot.isVehiclePresent(vehicleNumber))
                     .findFirst()
                     .orElseThrow(() -> new ParkingLotException(" Vehicle not present in lot",
                             ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT));
-            return numberOFParkingLots.indexOf(parkingLot);
+      }
+
+      public Location getLocation(String vehicleNumber) throws ParkingLotException {
+            ParkingLot parkingLot = getVehicleLocation(vehicleNumber);
+            Location location = new Location();
+            location.setParkingLot(parkingLot);
+            location.setSlotNumber(parkingLot.getVehicleSpot(vehicleNumber));
+            return location;
       }
 }
