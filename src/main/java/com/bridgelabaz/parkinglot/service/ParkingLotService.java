@@ -6,6 +6,7 @@ import com.bridgelabaz.parkinglot.observer.Owner;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -22,16 +23,37 @@ public class ParkingLotService {
                     .forEach(lot -> this.numberOFParkingLots.add(new ParkingLot(this.givenParkingLotSLots, new Owner(), new AirportSecurity())));
       }
 
-      public void parkCar(String carNumber) throws ParkingLotException {
+      public void parkCar(String vehicleNumber) throws ParkingLotException {
+            boolean isVehiclePresent;
+            for (Iterator<ParkingLot> iterator = numberOFParkingLots.iterator(); iterator.hasNext(); ) {
+                  ParkingLot lots = iterator.next();
+                  isVehiclePresent = lots.isVehiclePresent(vehicleNumber);
+                  if (isVehiclePresent)
+                        throw new ParkingLotException("Already Parked",
+                                ParkingLotException.ExceptionType.ALREADY_PARKED);
+            }
             ParkingLot lot = getLotToPark();
-            lot.parkVehicle(carNumber);
+            lot.parkVehicle(vehicleNumber);
+      }
+
+      public void unParkCar(String vehicleNumber) throws ParkingLotException {
+            ParkingLot lot = getLotToUnPark();
+            lot.unParkVehicle(vehicleNumber);
       }
 
       private ParkingLot getLotToPark() throws ParkingLotException {
             int totalCarsInAllLots = IntStream.range(0, givenParkingLots)
-                    .map(i -> this.numberOFParkingLots.get(i).getCarCount()).sum();
+                    .map(slot -> this.numberOFParkingLots.get(slot).getCarCount()).sum();
             if (totalCarsInAllLots >= (givenParkingLots * givenParkingLotSLots))
                   throw new ParkingLotException("Parking Lot Full", ParkingLotException.ExceptionType.PARKING_LOT_FULL);
+            ParkingLot parkingLot;
+            List<ParkingLot> selectLot = new ArrayList<>(this.numberOFParkingLots);
+            selectLot.sort(Comparator.comparing(ParkingLot::getCarCount));
+            parkingLot = selectLot.get(0);
+            return parkingLot;
+      }
+
+      private ParkingLot getLotToUnPark() {
             ParkingLot parkingLot;
             List<ParkingLot> selectLot = new ArrayList<>(this.numberOFParkingLots);
             selectLot.sort(Comparator.comparing(ParkingLot::getCarCount));
@@ -43,11 +65,12 @@ public class ParkingLotService {
             return this.numberOFParkingLots.stream().anyMatch(lot -> lot.isVehiclePresent(carNumber));
       }
 
-//      public String getCarLocation(String carNumber) {
-//            ParkingLot parkingLot = this.parkingLots.stream()
-//                    .filter(lot -> lot.isCarPresent(carNumber))
-//                    .findFirst().get();
-//            return String.format("Parking Lot: %d  Parking Slot: %d", parkingLots.indexOf(parkingLot) + 1,
-//                    parkingLot.carLocation(carNumber));
-//      }
+      public int getCarLocation(String carNumber) throws ParkingLotException {
+            ParkingLot parkingLot = this.numberOFParkingLots.stream()
+                    .filter(lot -> lot.isVehiclePresent(carNumber))
+                    .findFirst()
+                    .orElseThrow(() -> new ParkingLotException(" Vehicle not present in lot",
+                            ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT));
+            return numberOFParkingLots.indexOf(parkingLot);
+      }
 }

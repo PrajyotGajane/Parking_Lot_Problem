@@ -184,7 +184,7 @@ public class ParkingLotTest {
 
       @Test
       public void givenVehicle_WhenParkedInLot_ShouldReturnTrue() {
-            ParkingLotService parkingService = new ParkingLotService(5, 3);
+            ParkingLotService parkingService = new ParkingLotService(1, 1);
             try {
                   parkingService.parkCar("GA-08-A-4348");
                   boolean isVehiclePresent = parkingService.isVehiclePresent("GA-08-A-4348");
@@ -192,6 +192,31 @@ public class ParkingLotTest {
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }
+      }
 
+      @Test
+      public void givenVehicle_WhenParkedInLot_ShouldReturnLotAndSpotInLot() {
+            ParkingLotService parkingService = new ParkingLotService(3, 3);
+            try {
+                  parkingService.parkCar("GA-08-A-4348");
+                  parkingService.parkCar("GA-08-A-9767");
+                  int parkedLotNumber = parkingService.getCarLocation("GA-08-A-9767");
+                  Assert.assertEquals(1,parkedLotNumber);
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
+      }
+
+      @Test
+      public void givenVehicle_WhenUnParkedInLot_ShouldReturnFalse() {
+            ParkingLotService parkingService = new ParkingLotService(1, 1);
+            try {
+                  parkingService.parkCar("GA-08-A-4348");
+                  parkingService.unParkCar("GA-08-A-4348");
+                  boolean isVehiclePresent = parkingService.isVehiclePresent("GA-08-A-4348");
+                  Assert.assertFalse(isVehiclePresent);
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
       }
 }
