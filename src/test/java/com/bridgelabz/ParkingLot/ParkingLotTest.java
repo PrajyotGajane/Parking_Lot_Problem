@@ -1,30 +1,46 @@
 package com.bridgelabz.ParkingLot;
 
 import com.bridgelabaz.parkinglot.exception.ParkingLotException;
+import com.bridgelabaz.parkinglot.models.Vehicle;
 import com.bridgelabaz.parkinglot.observer.AirportSecurity;
 import com.bridgelabaz.parkinglot.observer.Owner;
 import com.bridgelabaz.parkinglot.service.ParkingLot;
-import com.bridgelabaz.parkinglot.service.ParkingLotService;
-import com.bridgelabaz.parkinglot.utility.Location;
+import com.bridgelabaz.parkinglot.service.ParkingLotSystem;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public class ParkingLotTest {
+
+      ParkingLotSystem parkingLotSystem;
+      Vehicle vehicle;
       ParkingLot parkingLot;
+      ParkingLot firstParkingLot;
+      ParkingLot secondParkingLot;
+      Vehicle firstVehicle;
+      Vehicle secondVehicle;
+      Vehicle thirdVehicle;
+
 
       @Before
-      public void setUp() {
-            parkingLot = new ParkingLot(5, new Owner(), new AirportSecurity());
+      public void init() {
+            vehicle = new Vehicle();
+            this.parkingLot = new ParkingLot(2);
+            this.firstParkingLot = new ParkingLot(3);
+            this.secondParkingLot = new ParkingLot(3);
+            this.firstVehicle = new Vehicle();
+            this.secondVehicle = new Vehicle();
+            this.thirdVehicle = new Vehicle();
+            this.parkingLotSystem = new ParkingLotSystem(firstParkingLot, secondParkingLot);
       }
 
       @Test
       public void givenVehicle_WhenParked_ShouldReturnTrue() {
             try {
-                  parkingLot.parkVehicle("GA-08-A-2323");
-                  boolean isParked = parkingLot.isVehiclePresent("GA-08-A-2323");
+                  parkingLotSystem.park(vehicle);
+                  boolean isParked = parkingLotSystem.isVehicleParked(vehicle);
                   Assert.assertTrue(isParked);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
@@ -34,7 +50,7 @@ public class ParkingLotTest {
       @Test
       public void givenVehicleNull_WhenParked_ShouldReturnTrue() {
             try {
-                  parkingLot.parkVehicle(null);
+                  parkingLotSystem.park(null);
             } catch (ParkingLotException e) {
                   Assert.assertEquals(e.type, ParkingLotException.ExceptionType.INVALID_VEHICLE);
             }
@@ -43,240 +59,203 @@ public class ParkingLotTest {
       @Test
       public void givenVehicle_WhenAlreadyParked_ShouldThrowCustomException() {
             try {
-                  parkingLot.parkVehicle("GA-08-A-2323");
-                  parkingLot.parkVehicle("GA-08-A-2323");
+                  parkingLotSystem.park(vehicle);
+                  parkingLotSystem.park(vehicle);
             } catch (ParkingLotException e) {
                   Assert.assertEquals(e.type, ParkingLotException.ExceptionType.ALREADY_PARKED);
             }
       }
 
       @Test
-      public void givenVehicle_WhenUnParked_ShouldReturnTrue() {
+      public void givenVehicle_WhenUnParkedAndCheckedIfParked_ShouldThrowException() {
             try {
-                  parkingLot.parkVehicle("GA-08-A-2323");
-                  parkingLot.unParkVehicle("GA-08-A-2323");
-                  boolean isUnParked = parkingLot.isVehiclePresent("GA-08-A-2323");
-                  Assert.assertFalse(isUnParked);
+                  parkingLotSystem.park(vehicle);
+                  parkingLotSystem.unPark(vehicle);
+                  parkingLotSystem.isVehicleParked(vehicle);
             } catch (ParkingLotException e) {
-                  e.printStackTrace();
+                  Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT, e.type);
             }
       }
 
       @Test
       public void givenVehicleToUnPark_WhenNotPresent_ShouldThrowCustomException() {
             try {
-                  parkingLot.unParkVehicle("GA-08-A-2323");
-            } catch (ParkingLotException e) {
-                  Assert.assertEquals(e.type, ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT);
-            }
-      }
-
-      @Test
-      public void givenParkingLotWithSize_WhenFull_ShouldInformOwnerAndReturnTrue() {
-            parkingLot = new ParkingLot(3, new Owner(), new AirportSecurity());
-            try {
-                  parkingLot.parkVehicle("GA-08-A-2323");
-                  parkingLot.parkVehicle("MH-08-A-3455");
-                  parkingLot.parkVehicle("GJ-08-A-4567");
-                  parkingLot.parkVehicle("AP-08-A-4557");
-            } catch (ParkingLotException e) {
-                  Assert.assertEquals(e.type, ParkingLotException.ExceptionType.PARKING_LOT_FULL);
-            }
-      }
-
-      @Test
-      public void givenParkingLotWithSize_WhenFullInformOwner_ShouldInformOwnerAndReturnTrue() {
-            parkingLot = new ParkingLot(3, new Owner(), new AirportSecurity());
-            try {
-                  parkingLot.parkVehicle("GA-08-A-2323");
-                  parkingLot.parkVehicle("MH-08-A-3455");
-                  parkingLot.parkVehicle("GJ-08-A-4567");
-                  boolean informedOwner = parkingLot.owner.isParkingLotFull();
-                  Assert.assertTrue(informedOwner);
-            } catch (ParkingLotException e) {
-                  e.printStackTrace();
-            }
-      }
-
-      @Test
-      public void givenParkingLotWithSize_WhenFullInformAirportSecurity_ShouldInformOwnerAndReturnTrue() {
-            parkingLot = new ParkingLot(3, new Owner(), new AirportSecurity());
-            try {
-                  parkingLot.parkVehicle("GA-08-A-2323");
-                  parkingLot.parkVehicle("MH-08-A-3455");
-                  parkingLot.parkVehicle("AP-08-A-4557");
-                  parkingLot.unParkVehicle("MH-08-A-3455");
-                  parkingLot.parkVehicle("GJ-08-A-4544");
-                  boolean informedAirportSecurity = parkingLot.airportSecurity.isParkingLotFull();
-                  Assert.assertTrue(informedAirportSecurity);
-            } catch (ParkingLotException e) {
-                  e.printStackTrace();
-            }
-      }
-
-      @Test
-      public void givenParkingLotWithExactSize_WhenSpaceAvailableInformOwner_ShouldInformOwnerAndReturnTrue() {
-            parkingLot = new ParkingLot(2, new Owner(), new AirportSecurity());
-            try {
-                  parkingLot.parkVehicle("GA-08-A-2323");
-                  parkingLot.parkVehicle("GJ-08-A-4567");
-                  parkingLot.unParkVehicle("GJ-08-A-4567");
-                  boolean informedOwner = parkingLot.owner.isParkingLotFull();
-                  Assert.assertFalse(informedOwner);
-            } catch (ParkingLotException e) {
-                  e.printStackTrace();
-            }
-      }
-
-      @Test
-      public void givenVehicle_WhenOwnerProvidesSlot_ShouldReturnTrue() {
-            try {
-                  parkingLot.parkAtOwnerProvidedSlot(1, "GA-08-A-2323");
-                  boolean vehicleSlot = parkingLot.isVehiclePresent("GA-08-A-2323");
-                  Assert.assertTrue(vehicleSlot);
-            } catch (ParkingLotException e) {
-                  e.printStackTrace();
-            }
-      }
-
-      @Test
-      public void givenVehicle_WhenOwnerProvidesSlot_IfVehicleAlreadyPresentOnSlot_ShouldThrowException() {
-            try {
-                  parkingLot.parkVehicle("GJ-08-A-4567");
-                  parkingLot.parkAtOwnerProvidedSlot(0, "GA-08-A-2323");
-            } catch (ParkingLotException e) {
-                  Assert.assertEquals(ParkingLotException.ExceptionType.SLOT_NOT_EMPTY, e.type);
-            }
-      }
-
-      @Test
-      public void givenParkedVehicle_WhenFound_ShouldReturnSpotInParkingLot() {
-            try {
-                  parkingLot.parkVehicle("MH-08-A-4567");
-                  parkingLot.parkVehicle("GA-08-A-2323");
-                  parkingLot.parkVehicle("GJ-08-A-4567");
-                  int position = parkingLot.getVehicleSpot("GJ-08-A-4567");
-                  Assert.assertEquals(2, position);
-            } catch (ParkingLotException e) {
-                  e.printStackTrace();
-            }
-      }
-
-      @Test
-      public void givenParkedVehicle_WhenNotFound_ShouldThrowException() {
-            try {
-                  parkingLot.vehicleSpotInLot("MH-08-A-4567");
+                  parkingLot.unParkVehicle(vehicle);
             } catch (ParkingLotException e) {
                   Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT, e.type);
             }
       }
 
       @Test
+      public void givenVehicleToUnPark_WhenNull_ShouldThrowCustomException() {
+            try {
+                  parkingLot.unParkVehicle(null);
+            } catch (ParkingLotException e) {
+                  Assert.assertEquals(ParkingLotException.ExceptionType.INVALID_VEHICLE, e.type);
+            }
+      }
+
+      //UC----4
+      @Test
+      public void givenVehicles_WhenParkingLotIsFull_ShouldInformOwner() {
+            Owner owner = new Owner();
+            parkingLot.registerParkingLotObserver(owner);
+            try {
+                  parkingLot.parkVehicle(vehicle);
+                  parkingLot.parkVehicle(firstVehicle);
+                  Assert.assertEquals("Capacity is Full", owner.getParkingLotStatus());
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
+      }
+
+      //UC----4
+      @Test
+      public void givenVehicles_WhenParkingLotIsFull_ShouldInformSecurity() {
+            AirportSecurity airportSecurityService = new AirportSecurity();
+            parkingLot.registerParkingLotObserver(airportSecurityService);
+            try {
+                  parkingLot.parkVehicle(vehicle);
+                  parkingLot.parkVehicle(firstVehicle);
+                  Assert.assertEquals("Capacity is Full", airportSecurityService.getParkingLotStatus());
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
+      }
+
+      //UC----5
+      @Test
+      public void givenParkingLotSize_IfSpaceAvailable_ShouldInformTheOwner() {
+            Owner owner = new Owner();
+            parkingLot.registerParkingLotObserver(owner);
+            try {
+                  parkingLot.parkVehicle(vehicle);
+                  parkingLot.unParkVehicle(vehicle);
+                  Assert.assertEquals("Capacity Available", owner.getParkingLotStatus());
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
+      }
+
+      //UC----6
+
+      @Test
+      public void givenVehicle_WhenOwnerProvidesSlot_ShouldReturnTrue() {
+            try {
+                  parkingLot.parkVehicle(vehicle);
+                  parkingLot.parkVehicle(2, thirdVehicle);
+                  boolean isVehicleParked = parkingLot.isVehiclePresent(thirdVehicle);
+                  Assert.assertTrue(isVehicleParked);
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
+      }
+      @Test
+      public void givenVehicleAlreadyPresent_WhenOwnerProvidesSlot_ShouldThrowException() {
+            try {
+                  parkingLot.parkVehicle(vehicle);
+                  parkingLot.parkVehicle(firstVehicle);
+                  parkingLot.parkVehicle(0, vehicle);
+            } catch (ParkingLotException e) {
+                  Assert.assertEquals(ParkingLotException.ExceptionType.ALREADY_PARKED, e.type);
+            }
+      }
+
+      //UC----7
+      @Test
+      public void givenVehicle_WhenDriverAskPositionToUnPark_ShouldReturn() {
+            try {
+                  parkingLot.parkVehicle(vehicle);
+                  int slotNumber = parkingLot.findVehicle(vehicle);
+                  Assert.assertEquals(1, slotNumber);
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
+      }
+
+      //UC----8
+      @Test
       public void givenVehicle_WhenParked_ShouldReturnParkingTime() {
             try {
-                  LocalTime localTime = LocalTime.now().withNano(0);
-                  parkingLot.parkVehicle("AP-08-A-4557");
-                  LocalTime parkedTime = parkingLot.getParkTime("AP-08-A-4557");
+                  LocalDateTime localTime = LocalDateTime.now().withSecond(0).withNano(0);
+                  parkingLotSystem.park(vehicle);
+                  LocalDateTime parkedTime = parkingLotSystem.getVehicleParkedTime(vehicle);
                   Assert.assertEquals(localTime, parkedTime);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }
       }
 
+      //UC----9
       @Test
-      public void givenVehicle_WhenParkedInLot_ShouldReturnTrue() {
-            ParkingLotService parkingService = new ParkingLotService(1, 1);
+      public void givenVehicles_WhenParkedInParkingSystem_ShouldDistributedEvenlyInParkingLots() {
+            ParkingLot firstParkedLotToBeChecked = parkingLotSystem.parkingLots.get(0);
+            ParkingLot secondParkedLotToBeChecked = parkingLotSystem.parkingLots.get(1);
+            Vehicle thirdVehicle = new Vehicle();
             try {
-                  parkingService.parkCar("GA-08-A-4348");
-                  boolean isVehiclePresent = parkingService.isVehiclePresent("GA-08-A-4348");
-                  Assert.assertTrue(isVehiclePresent);
+                  parkingLotSystem.park(firstVehicle);
+                  parkingLotSystem.park(secondVehicle);
+                  parkingLotSystem.park(thirdVehicle);
+                  ParkingLot firstParkedLot = parkingLotSystem.getParkingLotOfParkedVehicle(firstVehicle);
+                  ParkingLot secondParkedLot = parkingLotSystem.getParkingLotOfParkedVehicle(secondVehicle);
+                  ParkingLot thirdVehicleParkedLot = parkingLotSystem.getParkingLotOfParkedVehicle(thirdVehicle);
+                  Assert.assertEquals(firstParkedLotToBeChecked, firstParkedLot);
+                  Assert.assertEquals(secondParkedLotToBeChecked, secondParkedLot);
+                  Assert.assertEquals(firstParkedLotToBeChecked, thirdVehicleParkedLot);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }
       }
 
       @Test
-      public void givenVehicle_WhenParkedInLot_ShouldReturnLotAndSpotInLot() {
-            ParkingLotService parkingService = new ParkingLotService(3, 3);
-            ParkingLot parkedLotReference = parkingService.numberOFParkingLots.get(1);
+      public void givenParkedVehicle_WhenFound_ShouldReturnSlotInParkingLot() {
+            ParkingLot lotPositionToBeChecked = parkingLotSystem.parkingLots.get(1);
             try {
-                  parkingService.parkCar("GA-08-A-4348");
-                  parkingService.parkCar("GA-08-A-9767");
-                  ParkingLot parkedLot = parkingService.getVehicleLocation("GA-08-A-9767");
-                  Assert.assertEquals(parkedLotReference, parkedLot);
+                  parkingLotSystem.park(vehicle);
+                  parkingLotSystem.park(firstVehicle);
+                  parkingLotSystem.park(secondVehicle);
+                  ParkingLot position = parkingLotSystem.getParkingLotOfParkedVehicle(firstVehicle);
+                  Assert.assertEquals(lotPositionToBeChecked, position);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }
       }
 
       @Test
-      public void givenVehicle_WhenUnParkedInLot_ShouldReturnFalse() {
-            ParkingLotService parkingService = new ParkingLotService(1, 1);
+      public void givenVehicle_WhenNotFoundInParkingSystem_ShouldThrowException() {
             try {
-                  parkingService.parkCar("GA-08-A-4348");
-                  parkingService.unParkCar("GA-08-A-4348");
-
-                  boolean isVehiclePresent = parkingService.isVehiclePresent("GA-08-A-4348");
-                  Assert.assertFalse(isVehiclePresent);
-            } catch (ParkingLotException e) {
-                  e.printStackTrace();
-            }
-      }
-
-      @Test
-      public void givenVehicle_WhenNotInLotButUnParked_ShouldReturnThrowException() {
-            ParkingLotService parkingService = new ParkingLotService(1, 1);
-            try {
-                  parkingService.unParkCar("GA-08-A-4348");
+                  parkingLotSystem.getParkingLotOfParkedVehicle(vehicle);
             } catch (ParkingLotException e) {
                   Assert.assertEquals(ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT, e.type);
             }
       }
 
       @Test
-      public void givenVehicle_WhenAlreadyPresentInOneOfTheLots_ShouldThrowException() {
-            ParkingLotService parkingService = new ParkingLotService(1, 1);
+      public void givenVehicle_WhenParkedAndUnParkedInParkingSystem_ShouldDistributeEvenlyAfterUnPark() {
+            ParkingLot firstParkedLotToBeChecked = parkingLotSystem.parkingLots.get(0);
+            ParkingLot secondParkedLotToBeChecked = parkingLotSystem.parkingLots.get(1);
+            Vehicle thirdVehicle = new Vehicle();
             try {
-                  parkingService.parkCar("GA-08-A-4348");
-                  parkingService.parkCar("GA-08-A-4348");
+                  parkingLotSystem.park(firstVehicle);
+                  parkingLotSystem.unPark(firstVehicle);
+                  parkingLotSystem.park(secondVehicle);
+                  parkingLotSystem.park(thirdVehicle);
+                  ParkingLot secondParkedLot = parkingLotSystem.getParkingLotOfParkedVehicle(secondVehicle);
+                  ParkingLot thirdVehicleParkedLot = parkingLotSystem.getParkingLotOfParkedVehicle(thirdVehicle);
+                  Assert.assertEquals(firstParkedLotToBeChecked, secondParkedLot);
+                  Assert.assertEquals(secondParkedLotToBeChecked, thirdVehicleParkedLot);
             } catch (ParkingLotException e) {
-                  Assert.assertEquals(ParkingLotException.ExceptionType.ALREADY_PARKED, e.type);
+                  e.printStackTrace();
             }
       }
 
       @Test
-      public void givenVehicle_WhenParkedInLots_ShouldBeDistributedEvenly() {
-            ParkingLotService parkingService = new ParkingLotService(3, 2);
-            ParkingLot parkedLotReference = parkingService.numberOFParkingLots.get(0);
+      public void givenVehicle_WhenParkedThroughParkingSystem_ShouldReturnParkingSpotFromParkingLot() {
             try {
-                  parkingService.parkCar("GA-08-A-4348");//parked in first lot
-                  parkingService.parkCar("MH-08-A-4349");//parked in second lot
-                  parkingService.parkCar("KA-08-A-4350");//parked in third lot
-                  //should start from first lot
-                  parkingService.parkCar("BR-08-A-4351");
-                  parkingService.parkCar("AP-08-A-4348");
-                  parkingService.parkCar("GJ-08-A-4348");
-                  ParkingLot parkedLot = parkingService.getVehicleLocation("BR-08-A-4351");
-                  Assert.assertEquals(parkedLotReference,parkedLot);
-            } catch (ParkingLotException e) {
-                  Assert.assertEquals(ParkingLotException.ExceptionType.ALREADY_PARKED, e.type);
-            }
-      }
-
-      @Test
-      public void givenVehicle_WhenParkedInLot_ShouldReturnVehicleSlotInLot() {
-            ParkingLotService parkingService = new ParkingLotService(3, 2);
-            try {
-                  parkingService.parkCar("GA-08-A-4348");//parked in first lot
-                  parkingService.parkCar("MH-08-A-4349");//parked in second lot
-                  parkingService.parkCar("KA-08-A-4350");//parked in third lot
-                  //should start from first lot
-                  parkingService.parkCar("BR-08-A-4351");
-                  parkingService.parkCar("AP-08-A-4348");
-                  parkingService.parkCar("GJ-08-A-4348");
-                  Location location = parkingService.getLocation("GA-08-A-4348");
-                  int vehicleSlotInLot = location.getSlotNumber();
-                  Assert.assertEquals(0,vehicleSlotInLot);
+                  parkingLotSystem.park(firstVehicle);
+                  parkingLotSystem.park(secondVehicle);
+                  int slotPositionInLot = parkingLotSystem.getVehicleSpot(firstVehicle);
+                  Assert.assertEquals(1,slotPositionInLot);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }

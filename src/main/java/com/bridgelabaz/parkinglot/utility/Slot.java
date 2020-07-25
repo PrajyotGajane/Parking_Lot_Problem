@@ -1,27 +1,23 @@
 package com.bridgelabaz.parkinglot.utility;
 
-import java.time.LocalTime;
+import com.bridgelabaz.parkinglot.models.Vehicle;
+
+import java.time.LocalDateTime;
 
 public class Slot {
-      public String vehicle;
-      public LocalTime time;
-      public int slot;
+      public Vehicle vehicle;
+      public LocalDateTime time;
 
-      public Slot(int slot, String vehicle, LocalTime time) {
+      public Slot(Vehicle vehicle, LocalDateTime time) {
             this.vehicle = vehicle;
-            this.slot = slot;
             this.time = time;
       }
 
-      public int getSlot() {
-            return slot;
-      }
-
-      public LocalTime getTime() {
+      public LocalDateTime getTime() {
             return time;
       }
 
-      public String getVehicle() {
+      public Vehicle getVehicle() {
             return vehicle;
       }
 

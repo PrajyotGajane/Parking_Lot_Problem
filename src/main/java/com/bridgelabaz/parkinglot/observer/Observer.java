@@ -1,5 +1,6 @@
 package com.bridgelabaz.parkinglot.observer;
 
 public interface Observer {
-      void parkingLotFull(boolean isParkingLotFull);
+      String getParkingLotStatus();
+      void update(String parkingLotStatus);
 }

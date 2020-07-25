@@ -1,14 +1,15 @@
 package com.bridgelabaz.parkinglot.observer;
 
 public class AirportSecurity implements Observer {
-      public boolean isParkingLotFull;
+      private String parkingLotStatus;
 
       @Override
-      public void parkingLotFull(boolean isParkingLotFull) {
-            this.isParkingLotFull = isParkingLotFull;
+      public String getParkingLotStatus() {
+            return parkingLotStatus;
       }
 
-      public boolean isParkingLotFull() {
-            return isParkingLotFull;
+      @Override
+      public void update(String parkingLotStatus) {
+            this.parkingLotStatus = parkingLotStatus;
       }
 }
