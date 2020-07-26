@@ -298,4 +298,16 @@ public class ParkingLotTest {
             }
       }
 
+      @Test
+      public void givenLargeVehicleWithHandicappedDriver_ShouldGetParkedInTheLotWithMostEmptySlots() {
+            try {
+                  VehicleDetails largeVehicle = new VehicleDetails(new Object(), DriverType.HANDICAPPED, VehicleSize.LARGE);
+                  parkingLotSystem.park(firstVehicle);
+                  parkingLotSystem.park(largeVehicle);
+                  ParkingLot parkingLotWithMostFreeSpace = parkingLotSystem.getParkingLotOfParkedVehicle(largeVehicle);
+                  Assert.assertEquals(secondParkingLot, parkingLotWithMostFreeSpace);
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
+      }
 }
