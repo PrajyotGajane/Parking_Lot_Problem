@@ -42,7 +42,7 @@ public class ParkingLotTest {
             this.secondParkingLot = new ParkingLot(3);
             this.thirdParkingLot = new ParkingLot(3);
             this.firstVehicle = new Vehicle("GA-08-A-1212", VehicleBrand.TOYOTA, VehicleColor.WHITE);
-            this.secondVehicle = new Vehicle("GA-08-A-2345", VehicleBrand.TOYOTA, VehicleColor.WHITE);
+            this.secondVehicle = new Vehicle("GA-08-A-2345", VehicleBrand.BMW, VehicleColor.WHITE);
             this.thirdVehicle = new Vehicle("GA-08-A-2345", VehicleBrand.TOYOTA, VehicleColor.WHITE);
             this.vehicle = new VehicleDetails(vehicleDetail, DriverType.NORMAL,VehicleSize.SMALL,"Parag");
             this.vehicleDetail = new Vehicle("GA-09-P-2365", VehicleBrand.TOYOTA, VehicleColor.BLUE);
@@ -344,6 +344,21 @@ public class ParkingLotTest {
                   Map<ParkingLot, List<String>> slotNumbersByCompanyAndColor =
                           parkingLotSystem.getVehicleNumberAndAttendantName(VehicleBrand.TOYOTA, VehicleColor.BLUE);
                   Assert.assertEquals("GA-08-A-2456 Harsh", slotNumbersByCompanyAndColor.get(secondParkingLot).get(0));
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
+      }
+      //UC----14
+      @Test
+      public void givenBMWVehicle_WhenFound_ShouldReturnListOfSlotNumber() {
+            Vehicle vehicle = new Vehicle("MH04 AB 9999", VehicleBrand.BMW, VehicleColor.WHITE);
+            VehicleDetails vehicleDetails = new VehicleDetails(vehicle, DriverType.NORMAL, VehicleSize.LARGE, "Harsh");
+            try {
+                  parkingLotSystem.park(secondVehicleDetail);
+                  parkingLotSystem.park(vehicleDetails);
+                  Map<ParkingLot, List<Integer>> slotNumbersByCompany =
+                          parkingLotSystem.getSlotNumbersOfVehiclesByCompany(VehicleBrand.BMW);
+                  Assert.assertEquals(2, slotNumbersByCompany.size());
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }

@@ -111,4 +111,15 @@ public class ParkingLotSystem {
             }
             return vehicleByCompanyAndColour;
       }
+
+      public Map<ParkingLot, List<Integer>> getSlotNumbersOfVehiclesByCompany(VehicleBrand brand) {
+            Map<ParkingLot, List<Integer>> vehicleByCompany = new HashMap<>();
+            for (ParkingLot parkingLot : this.parkingLots) {
+                  List<Integer> slotNumbers = parkingLot.getSlotNumbersByCompany(brand);
+                  if (slotNumbers.size() > 0) {
+                        vehicleByCompany.put(parkingLot, slotNumbers);
+                  }
+            }
+            return vehicleByCompany;
+      }
 }
