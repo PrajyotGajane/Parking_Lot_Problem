@@ -1,6 +1,7 @@
 package com.bridgelabaz.parkinglot.models;
 
 import com.bridgelabaz.parkinglot.enums.DriverType;
+import com.bridgelabaz.parkinglot.enums.VehicleColor;
 import com.bridgelabaz.parkinglot.enums.VehicleSize;
 
 import java.util.Objects;
@@ -9,11 +10,13 @@ public class VehicleDetails {
       private VehicleSize vehicleSize;
       private Object vehicle;
       private DriverType driverType;
+      private VehicleColor color;
 
-      public VehicleDetails(Object vehicle, DriverType driverType, VehicleSize vehicleSize) {
+      public VehicleDetails(Object vehicle, DriverType driverType, VehicleSize vehicleSize, VehicleColor color) {
             this.vehicle = vehicle;
             this.driverType = driverType;
             this.vehicleSize = vehicleSize;
+            this.color = color;
       }
 
       public Object getVehicle() {
@@ -26,6 +29,10 @@ public class VehicleDetails {
 
       public VehicleSize getVehicleSize() {
             return vehicleSize;
+      }
+
+      public VehicleColor getColor() {
+            return color;
       }
 
       @Override

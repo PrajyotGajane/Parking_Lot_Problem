@@ -1,6 +1,7 @@
 package com.bridgelabaz.parkinglot.service;
 
 import com.bridgelabaz.parkinglot.enums.DriverType;
+import com.bridgelabaz.parkinglot.enums.VehicleColor;
 import com.bridgelabaz.parkinglot.enums.VehicleSize;
 import com.bridgelabaz.parkinglot.exception.ParkingLotException;
 import com.bridgelabaz.parkinglot.models.VehicleDetails;
@@ -22,7 +23,7 @@ public class ParkingLotSystem {
                   parkingLot.isVehicleAlreadyPresent(vehicle);
             }
             if (vehicle.getDriverType().equals(DriverType.HANDICAPPED)) {
-                        parkingLotAlLot = getLotForLargeVehicle(this.parkingLots);
+                        parkingLotAlLot = getLotForHandicappedDriver(this.parkingLots);
             }
             if (vehicle.getDriverType().equals(DriverType.NORMAL)) {
                   if (vehicle.getVehicleSize().equals(VehicleSize.SMALL)) {
@@ -86,5 +87,16 @@ public class ParkingLotSystem {
                     .filter(parkingLot -> parkingLot.getCountOfVehicles() != parkingLot.getParkingCapacity())
                     .findFirst()
                     .orElseThrow(() -> new ParkingLotException("Parking Full", ParkingLotException.ExceptionType.PARKING_LOT_FULL));
+      }
+
+      public Map<ParkingLot, List<Integer>> getLotAndSlotListOfVehiclesByColor(VehicleColor vehicleColour) {
+            Map<ParkingLot, List<Integer>> vehiclesWithSpecificColor = new HashMap<>();
+            for (ParkingLot parkingLot : this.parkingLots) {
+                  List<Integer> slotNumbers = parkingLot.getListOfSlotsByColour(vehicleColour);
+                  if (slotNumbers.size() > 0) {
+                        vehiclesWithSpecificColor.put(parkingLot, slotNumbers);
+                  }
+            }
+            return vehiclesWithSpecificColor;
       }
 }

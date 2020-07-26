@@ -1,5 +1,6 @@
 package com.bridgelabaz.parkinglot.service;
 
+import com.bridgelabaz.parkinglot.enums.VehicleColor;
 import com.bridgelabaz.parkinglot.exception.ParkingLotException;
 import com.bridgelabaz.parkinglot.models.VehicleDetails;
 import com.bridgelabaz.parkinglot.models.Slot;
@@ -121,5 +122,15 @@ public class ParkingLot {
 
       public Integer getParkingCapacity() {
             return parkingCapacity;
+      }
+
+      public List<Integer> getListOfSlotsByColour(VehicleColor vehicleColour) {
+            List<Integer> slotNumbers = new ArrayList<>();
+            for (Integer slotNumber : parkedVehicles.keySet()) {
+                  if (parkedVehicles.get(slotNumber).getVehicle().getColor().equals(vehicleColour)) {
+                        slotNumbers.add(slotNumber);
+                  }
+            }
+            return slotNumbers;
       }
 }
