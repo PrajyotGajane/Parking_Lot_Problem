@@ -1,16 +1,19 @@
 package com.bridgelabaz.parkinglot.models;
 
 import com.bridgelabaz.parkinglot.enums.DriverType;
+import com.bridgelabaz.parkinglot.enums.VehicleSize;
 
 import java.util.Objects;
 
 public class VehicleDetails {
+      private VehicleSize vehicleSize;
       private Object vehicle;
       private DriverType driverType;
 
-      public VehicleDetails(Object vehicle, DriverType driverType) {
+      public VehicleDetails(Object vehicle, DriverType driverType, VehicleSize vehicleSize) {
             this.vehicle = vehicle;
             this.driverType = driverType;
+            this.vehicleSize = vehicleSize;
       }
 
       public Object getVehicle() {
@@ -19,6 +22,10 @@ public class VehicleDetails {
 
       public DriverType getDriverType() {
             return driverType;
+      }
+
+      public VehicleSize getVehicleSize() {
+            return vehicleSize;
       }
 
       @Override

@@ -1,6 +1,7 @@
 package com.bridgelabz.ParkingLot;
 
 import com.bridgelabaz.parkinglot.enums.DriverType;
+import com.bridgelabaz.parkinglot.enums.VehicleSize;
 import com.bridgelabaz.parkinglot.exception.ParkingLotException;
 import com.bridgelabaz.parkinglot.models.VehicleDetails;
 import com.bridgelabaz.parkinglot.observer.AirportSecurity;
@@ -28,14 +29,14 @@ public class ParkingLotTest {
 
       @Before
       public void init() {
-            vehicle = new VehicleDetails(new Object(), DriverType.NORMAL);
+            vehicle = new VehicleDetails(new Object(), DriverType.NORMAL, VehicleSize.SMALL);
             this.parkingLot = new ParkingLot(2);
             this.firstParkingLot = new ParkingLot(3);
             this.secondParkingLot = new ParkingLot(3);
             this.thirdParkingLot = new ParkingLot(3);
-            this.firstVehicle = new VehicleDetails(new Object(), DriverType.NORMAL);
-            this.secondVehicle = new VehicleDetails(new Object(), DriverType.NORMAL);
-            this.thirdVehicle = new VehicleDetails(new Object(), DriverType.NORMAL);
+            this.firstVehicle = new VehicleDetails(new Object(), DriverType.NORMAL, VehicleSize.SMALL);
+            this.secondVehicle = new VehicleDetails(new Object(), DriverType.NORMAL, VehicleSize.SMALL);
+            this.thirdVehicle = new VehicleDetails(new Object(), DriverType.NORMAL, VehicleSize.SMALL);
             this.parkingLotSystem = new ParkingLotSystem(firstParkingLot, secondParkingLot, thirdParkingLot);
       }
 
@@ -52,7 +53,7 @@ public class ParkingLotTest {
 
       @Test
       public void givenVehicleNull_WhenParked_ShouldReturnTrue() {
-            VehicleDetails vehicleDetails = new VehicleDetails(null, DriverType.NORMAL);
+            VehicleDetails vehicleDetails = new VehicleDetails(null, DriverType.NORMAL, VehicleSize.SMALL);
             try {
                   parkingLotSystem.park(vehicleDetails);
             } catch (ParkingLotException e) {
@@ -243,7 +244,7 @@ public class ParkingLotTest {
 
       @Test
       public void givenVehicle_WhenParkedAndUnParkedInParkingSystem_ShouldDistributeEvenlyAfterUnPark() {
-            VehicleDetails thirdVehicle = new VehicleDetails(new Object(), DriverType.NORMAL);
+            VehicleDetails thirdVehicle = new VehicleDetails(new Object(), DriverType.NORMAL, VehicleSize.SMALL);
             try {
                   parkingLotSystem.park(firstVehicle);
                   parkingLotSystem.unPark(firstVehicle);
@@ -273,7 +274,7 @@ public class ParkingLotTest {
       @Test
       public void givenAVehicleWithHandicappedDriver_IfFirstLotHasEmptySlotsTheVehicle_ShouldParkedInTheFirstParkingLot() {
             try {
-                  VehicleDetails vehicleWithHandicapDriver = new VehicleDetails(new Object(), DriverType.HANDICAPPED);
+                  VehicleDetails vehicleWithHandicapDriver = new VehicleDetails(new Object(), DriverType.HANDICAPPED, VehicleSize.SMALL);
                   parkingLotSystem.park(firstVehicle);
                   parkingLotSystem.park(vehicleWithHandicapDriver);
                   ParkingLot presentLot = parkingLotSystem.getParkingLotOfParkedVehicle(vehicleWithHandicapDriver);
@@ -282,4 +283,19 @@ public class ParkingLotTest {
                   e.printStackTrace();
             }
       }
+
+      @Test
+      public void givenLargeVehicle_ShouldGetParkedInTheLotWithMostEmptySlots() {
+            try {
+                  VehicleDetails largeVehicle = new VehicleDetails(new Object(), DriverType.NORMAL, VehicleSize.LARGE);
+                  parkingLotSystem.park(firstVehicle);
+                  parkingLotSystem.park(secondVehicle);
+                  parkingLotSystem.park(largeVehicle);
+                  ParkingLot parkingLotWithMostFreeSpace = parkingLotSystem.getParkingLotOfParkedVehicle(largeVehicle);
+                  Assert.assertEquals(thirdParkingLot, parkingLotWithMostFreeSpace);
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
+      }
+
 }

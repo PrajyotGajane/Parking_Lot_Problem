@@ -1,7 +1,5 @@
 package com.bridgelabaz.parkinglot.utility;
 
-import com.bridgelabaz.parkinglot.exception.ParkingLotException;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +29,8 @@ public class SlotAllotment {
       }
 
       public Integer getNearestParkingSlot() {
-                  return this.availableParkingSlots.remove(0);
+                  Integer slot = this.availableParkingSlots.get(0);
+                  this.availableParkingSlots.remove(0);
+                  return slot;
       }
 }

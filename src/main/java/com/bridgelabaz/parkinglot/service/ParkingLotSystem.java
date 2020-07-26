@@ -1,6 +1,7 @@
 package com.bridgelabaz.parkinglot.service;
 
 import com.bridgelabaz.parkinglot.enums.DriverType;
+import com.bridgelabaz.parkinglot.enums.VehicleSize;
 import com.bridgelabaz.parkinglot.exception.ParkingLotException;
 import com.bridgelabaz.parkinglot.models.VehicleDetails;
 
@@ -21,11 +22,17 @@ public class ParkingLotSystem {
                   parkingLot.isVehicleAlreadyPresent(vehicle);
             }
             if (vehicle.getDriverType().equals(DriverType.HANDICAPPED)) {
-                  parkingLotAlLot = getLotForHandicapped(this.parkingLots);
+                        parkingLotAlLot = getLotForLargeVehicle(this.parkingLots);
             }
             if (vehicle.getDriverType().equals(DriverType.NORMAL)) {
-                  parkingLotAlLot = getLotForNormal(this.parkingLots);
+                  if (vehicle.getVehicleSize().equals(VehicleSize.SMALL)) {
+                        parkingLotAlLot = getLotForNormal(this.parkingLots);
+                  }
+                  else {
+                        parkingLotAlLot = getLotForLargeVehicle(this.parkingLots);
+                  }
             }
+
             if (parkingLotAlLot != null) {
                   parkingLotAlLot.parkVehicle(vehicle);
             }
@@ -65,8 +72,17 @@ public class ParkingLotSystem {
             return parkingLots.get(0);
       }
 
-      public ParkingLot getLotForHandicapped(List<ParkingLot> parkingLots) throws ParkingLotException {
+      public ParkingLot getLotForHandicappedDriver(List<ParkingLot> parkingLots) throws ParkingLotException {
             return parkingLots.stream()
+                    .filter(parkingLot -> parkingLot.getCountOfVehicles() != parkingLot.getParkingCapacity())
+                    .findFirst()
+                    .orElseThrow(() -> new ParkingLotException("Parking Full", ParkingLotException.ExceptionType.PARKING_LOT_FULL));
+      }
+
+      public static ParkingLot getLotForLargeVehicle(List<ParkingLot> parkingLots) throws ParkingLotException {
+            return parkingLots.stream()
+                    .sorted(Comparator.comparing(parkingLot -> (parkingLot.getParkingCapacity() - parkingLot.getCountOfVehicles()),
+                            Comparator.reverseOrder()))
                     .filter(parkingLot -> parkingLot.getCountOfVehicles() != parkingLot.getParkingCapacity())
                     .findFirst()
                     .orElseThrow(() -> new ParkingLotException("Parking Full", ParkingLotException.ExceptionType.PARKING_LOT_FULL));
