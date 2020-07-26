@@ -1,5 +1,6 @@
 package com.bridgelabaz.parkinglot.service;
 
+import com.bridgelabaz.parkinglot.enums.VehicleBrand;
 import com.bridgelabaz.parkinglot.enums.VehicleColor;
 import com.bridgelabaz.parkinglot.exception.ParkingLotException;
 import com.bridgelabaz.parkinglot.models.VehicleDetails;
@@ -127,10 +128,22 @@ public class ParkingLot {
       public List<Integer> getListOfSlotsByColour(VehicleColor vehicleColour) {
             List<Integer> slotNumbers = new ArrayList<>();
             for (Integer slotNumber : parkedVehicles.keySet()) {
-                  if (parkedVehicles.get(slotNumber).getVehicle().getColor().equals(vehicleColour)) {
+                  if (parkedVehicles.get(slotNumber).getVehicle().getVehicle().getVehicleColour().equals(vehicleColour)) {
                         slotNumbers.add(slotNumber);
                   }
             }
             return slotNumbers;
+      }
+
+      public List<String> getSlotNumbersByCompanyAndColour(VehicleBrand brand, VehicleColor color) {
+            List<String> parkingAttendant = new ArrayList<>();
+            for (Integer slotNumber : parkedVehicles.keySet()) {
+                  if (parkedVehicles.get(slotNumber).getVehicle().getVehicle().getVehicleColour().equals(color) &&
+                          parkedVehicles.get(slotNumber).getVehicle().getVehicle().getBrand().equals(brand)) {
+                        parkingAttendant.add(parkedVehicles.get(slotNumber).getVehicle().getVehicle().getVehicleNumber()+
+                                " "+parkedVehicles.get(slotNumber).getVehicle().getParkingAttendant());
+                  }
+            }
+            return parkingAttendant;
       }
 }

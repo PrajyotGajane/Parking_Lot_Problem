@@ -1,5 +1,5 @@
 package com.bridgelabaz.parkinglot.enums;
 
-public enum VehicleColor {
-      WHITE, BLUE
+public enum VehicleBrand {
+      TOYOTA
 }

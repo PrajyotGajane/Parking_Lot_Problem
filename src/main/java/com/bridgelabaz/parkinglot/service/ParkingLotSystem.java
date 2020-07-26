@@ -1,6 +1,7 @@
 package com.bridgelabaz.parkinglot.service;
 
 import com.bridgelabaz.parkinglot.enums.DriverType;
+import com.bridgelabaz.parkinglot.enums.VehicleBrand;
 import com.bridgelabaz.parkinglot.enums.VehicleColor;
 import com.bridgelabaz.parkinglot.enums.VehicleSize;
 import com.bridgelabaz.parkinglot.exception.ParkingLotException;
@@ -98,5 +99,16 @@ public class ParkingLotSystem {
                   }
             }
             return vehiclesWithSpecificColor;
+      }
+
+      public Map<ParkingLot, List<String>> getVehicleNumberAndAttendantName(VehicleBrand brand, VehicleColor color) {
+            Map<ParkingLot, List<String>> vehicleByCompanyAndColour = new HashMap<>();
+            for (ParkingLot parkingLot : this.parkingLots) {
+                  List<String> slotNumbers = parkingLot.getSlotNumbersByCompanyAndColour(brand, color);
+                  if (slotNumbers.size() > 0) {
+                        vehicleByCompanyAndColour.put(parkingLot, slotNumbers);
+                  }
+            }
+            return vehicleByCompanyAndColour;
       }
 }
