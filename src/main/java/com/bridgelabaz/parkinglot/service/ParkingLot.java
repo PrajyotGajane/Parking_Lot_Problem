@@ -156,4 +156,18 @@ public class ParkingLot {
             }
             return slotNumbers;
       }
+
+      public List<Integer> getVehiclesParkedFromTime(int time) {
+            List<Integer> slotNumbers = new ArrayList<>();
+            for (Integer slotNumber : parkedVehicles.keySet()) {
+                  if ((parkedVehicles.get(slotNumber).getTime().getMinute() - getCurrentTine().getMinute()) <= time) {
+                        slotNumbers.add(slotNumber);
+                  }
+            }
+            return slotNumbers;
+      }
+
+      private LocalDateTime getCurrentTine() {
+            return LocalDateTime.now();
+      }
 }

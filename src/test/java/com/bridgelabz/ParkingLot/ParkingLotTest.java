@@ -363,4 +363,18 @@ public class ParkingLotTest {
                   e.printStackTrace();
             }
       }
+      //UC--15
+      @Test
+      public void givenVehicles_WhenParked_ShouldReturnListOfParkedInLast30Minutes() {
+            try {
+                  parkingLotSystem.park(firstVehicleDetail);
+                  parkingLotSystem.park(secondVehicleDetail);
+                  Map<ParkingLot, List<Integer>> slotNumbersVehiclesByTime =
+                          parkingLotSystem.getVehiclesParkedFromTime(30);
+                  Assert.assertEquals(1, slotNumbersVehiclesByTime.get(firstParkingLot).get(0).intValue());
+                  Assert.assertEquals(1, slotNumbersVehiclesByTime.get(secondParkingLot).get(0).intValue());
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
+      }
 }
