@@ -1,7 +1,6 @@
 package com.bridgelabaz.parkinglot.models;
 
 import com.bridgelabaz.parkinglot.enums.DriverType;
-import com.bridgelabaz.parkinglot.enums.VehicleColor;
 import com.bridgelabaz.parkinglot.enums.VehicleSize;
 
 import java.util.Objects;
@@ -31,9 +30,10 @@ public class VehicleDetails {
             return vehicleSize;
       }
 
-      public String getParkingAttendant(){
+      public String getParkingAttendant() {
             return parkingAttendant;
       }
+
       @Override
       public boolean equals(Object o) {
             if (this == o) return true;

@@ -5,10 +5,12 @@ import com.bridgelabaz.parkinglot.enums.VehicleBrand;
 import com.bridgelabaz.parkinglot.enums.VehicleColor;
 import com.bridgelabaz.parkinglot.enums.VehicleSize;
 import com.bridgelabaz.parkinglot.exception.ParkingLotException;
+import com.bridgelabaz.parkinglot.models.Slot;
 import com.bridgelabaz.parkinglot.models.VehicleDetails;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ParkingLotSystem {
       public ArrayList<ParkingLot> parkingLots;
@@ -24,13 +26,12 @@ public class ParkingLotSystem {
                   parkingLot.isVehicleAlreadyPresent(vehicle);
             }
             if (vehicle.getDriverType().equals(DriverType.HANDICAPPED)) {
-                        parkingLotAlLot = getLotForHandicappedDriver(this.parkingLots);
+                  parkingLotAlLot = getLotForHandicappedDriver(this.parkingLots);
             }
             if (vehicle.getDriverType().equals(DriverType.NORMAL)) {
                   if (vehicle.getVehicleSize().equals(VehicleSize.SMALL)) {
                         parkingLotAlLot = getLotForNormal(this.parkingLots);
-                  }
-                  else {
+                  } else {
                         parkingLotAlLot = getLotForLargeVehicle(this.parkingLots);
                   }
             }
@@ -132,5 +133,27 @@ public class ParkingLotSystem {
                   }
             }
             return slotNumbersByTime;
+      }
+
+      public Map<ParkingLot, List<Integer>> getSlotNumbersByVehicleSizeAndDriverType(DriverType driverType, VehicleSize vehicleSize) {
+            Map<ParkingLot, List<Integer>> lotAndSlotNumbers = new HashMap<>();
+            for (ParkingLot parkingLot : this.parkingLots) {
+                  List<Integer> slotNumbers = parkingLot.getSlotNumbersByVehicleSizeAndDriverType(driverType, vehicleSize);
+                  if (slotNumbers.size() > 0) {
+                        lotAndSlotNumbers.put(parkingLot, slotNumbers);
+                  }
+            }
+            return lotAndSlotNumbers;
+      }
+
+      public Map<ParkingLot, List<String>> getSlotNumbersBySizeAndDriverType(DriverType driverType, VehicleSize vehicleSize) {
+            Map<ParkingLot, List<String>> lotAndSlotNumbers = new HashMap<>();
+            for (ParkingLot parkingLot : this.parkingLots) {
+                  List<String> slotNumbers = parkingLot.getCompleteVehiclesList(driverType, vehicleSize);
+                  if (slotNumbers.size() > 0) {
+                        lotAndSlotNumbers.put(parkingLot, slotNumbers);
+                  }
+            }
+            return lotAndSlotNumbers;
       }
 }

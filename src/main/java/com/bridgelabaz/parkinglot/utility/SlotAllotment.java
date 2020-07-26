@@ -29,8 +29,8 @@ public class SlotAllotment {
       }
 
       public Integer getNearestParkingSlot() {
-                  Integer slot = this.availableParkingSlots.get(0);
-                  this.availableParkingSlots.remove(0);
-                  return slot;
+            Integer slot = this.availableParkingSlots.get(0);
+            this.availableParkingSlots.remove(0);
+            return slot;
       }
 }

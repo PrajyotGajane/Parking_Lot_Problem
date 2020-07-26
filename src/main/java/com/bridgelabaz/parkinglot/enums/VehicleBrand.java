@@ -1,5 +1,5 @@
 package com.bridgelabaz.parkinglot.enums;
 
 public enum VehicleBrand {
-      TOYOTA,BMW
+      TOYOTA, BMW
 }

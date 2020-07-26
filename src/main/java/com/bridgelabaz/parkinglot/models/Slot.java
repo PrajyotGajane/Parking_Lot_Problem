@@ -5,9 +5,11 @@ import java.time.LocalDateTime;
 public class Slot {
       public VehicleDetails vehicle;
       public LocalDateTime time;
+      public Integer slotNumber;
 
-      public Slot(VehicleDetails vehicle, LocalDateTime time) {
+      public Slot(VehicleDetails vehicle, Integer slotNumber, LocalDateTime time) {
             this.vehicle = vehicle;
+            this.slotNumber = slotNumber;
             this.time = time;
       }
 
@@ -17,6 +19,10 @@ public class Slot {
 
       public VehicleDetails getVehicle() {
             return vehicle;
+      }
+
+      public Integer getSlotNumber() {
+            return slotNumber;
       }
 
       @Override
