@@ -1,8 +1,8 @@
 package com.bridgelabaz.parkinglot.service;
 
 import com.bridgelabaz.parkinglot.exception.ParkingLotException;
-import com.bridgelabaz.parkinglot.models.Vehicle;
-import com.bridgelabaz.parkinglot.utility.Slot;
+import com.bridgelabaz.parkinglot.models.VehicleDetails;
+import com.bridgelabaz.parkinglot.models.Slot;
 import com.bridgelabaz.parkinglot.observer.Observer;
 import com.bridgelabaz.parkinglot.utility.SlotAllotment;
 
@@ -36,14 +36,14 @@ public class ParkingLot {
             return parkedVehicles.size();
       }
 
-      public boolean isVehiclePresent(Vehicle vehicle) {
+      public boolean isVehiclePresent(VehicleDetails vehicle) {
             return parkedVehicles.entrySet()
                     .stream()
                     .anyMatch(entry -> vehicle.equals(entry.getValue().getVehicle()));
 
       }
 
-      public void parkVehicle(Vehicle vehicle) {
+      public void parkVehicle(VehicleDetails vehicle) {
             if (vehicle == null)
                   throw new ParkingLotException("Invalid Vehicle", ParkingLotException.ExceptionType.INVALID_VEHICLE);
             if (parkedVehicles.size() == parkingCapacity)
@@ -56,18 +56,29 @@ public class ParkingLot {
             }
       }
 
-      public void unParkVehicle(Vehicle vehicle) {
+      public void unParkVehicle(VehicleDetails vehicle) {
             if (vehicle == null)
                   throw new ParkingLotException("Invalid Vehicle", ParkingLotException.ExceptionType.INVALID_VEHICLE);
 
             if (!isVehiclePresent(vehicle)) {
                   throw new ParkingLotException("No Vehicle Found", ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT);
             }
-            parkedVehicles.remove(getPositionOfVehicle(vehicle));
+            parkedVehicles.remove(getSlot(vehicle));
             informListeners("Capacity Available");
       }
 
-      public Integer getPositionOfVehicle(Vehicle vehicle) {
+      public Integer getSlot(VehicleDetails vehicle) {
+            Integer slot = -1;
+            for (Map.Entry<Integer, Slot> entry : parkedVehicles.entrySet()) {
+                  if (vehicle.equals(entry.getValue().getVehicle())) {
+                        slot = entry.getKey();
+                        slotAllotment.unParkUpdate(slot);
+                  }
+            }
+            return slot;
+      }
+
+      public Integer getPositionOfVehicle(VehicleDetails vehicle) {
             Integer slot = -1;
             for (Map.Entry<Integer, Slot> entry : parkedVehicles.entrySet()) {
                   if (vehicle.equals(entry.getValue().getVehicle())) {
@@ -77,7 +88,7 @@ public class ParkingLot {
             return slot;
       }
 
-      public Integer findVehicle(Vehicle vehicle) {
+      public Integer findVehicle(VehicleDetails vehicle) {
             int slot = -1;
             for (Map.Entry<Integer, Slot> entry : parkedVehicles.entrySet()) {
                   if (vehicle.equals(entry.getValue().getVehicle())) {
@@ -88,7 +99,7 @@ public class ParkingLot {
             return slot;
       }
 
-      public void parkVehicle(int slot, Vehicle vehicle) {
+      public void parkVehicle(int slot, VehicleDetails vehicle) {
             if (isVehiclePresent(vehicle))
                   throw new ParkingLotException("Already present", ParkingLotException.ExceptionType.ALREADY_PARKED);
             if (parkedVehicles.size() >= parkingCapacity)
@@ -97,14 +108,18 @@ public class ParkingLot {
             slotAllotment.parkUpdate(slot);
       }
 
-      public LocalDateTime getParkingTime(Vehicle vehicle) {
+      public LocalDateTime getParkingTime(VehicleDetails vehicle) {
             Slot slot = parkedVehicles.get(getPositionOfVehicle(vehicle));
             return slot.getTime();
       }
 
-      public void isVehicleAlreadyPresent(Vehicle vehicle) {
+      public void isVehicleAlreadyPresent(VehicleDetails vehicle) {
             if (isVehiclePresent(vehicle)) {
                   throw new ParkingLotException("Already present", ParkingLotException.ExceptionType.ALREADY_PARKED);
             }
+      }
+
+      public Integer getParkingCapacity() {
+            return parkingCapacity;
       }
 }
