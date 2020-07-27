@@ -198,4 +198,12 @@ public class ParkingLot {
                             + (parkingSlot.getVehicle().getParkingAttendant())))
                     .collect(Collectors.toList());
       }
+
+      public List<Integer> getAllVehiclesParkedInParkingLot() {
+            List<Integer> slotNumbers = new ArrayList<>();
+            for (Integer slotNumber : parkedVehicles.keySet()) {
+                  slotNumbers.add(slotNumber);
+            }
+            return slotNumbers;
+      }
 }

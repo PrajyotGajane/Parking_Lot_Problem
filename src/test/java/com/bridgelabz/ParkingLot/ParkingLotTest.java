@@ -31,11 +31,15 @@ public class ParkingLotTest {
       Vehicle firstVehicle;
       Vehicle secondVehicle;
       Vehicle thirdVehicle;
+      Vehicle forthVehicle;
+      Vehicle fifthVehicle;
       Vehicle vehicleDetail;
       ParkingLot thirdParkingLot;
       VehicleDetails firstVehicleDetail;
       VehicleDetails secondVehicleDetail;
       VehicleDetails thirdVehicleDetail;
+      VehicleDetails forthVehicleDetail;
+      VehicleDetails fifthVehicleDetail;
 
       @Before
       public void init() {
@@ -44,13 +48,17 @@ public class ParkingLotTest {
             this.secondParkingLot = new ParkingLot(3);
             this.thirdParkingLot = new ParkingLot(3);
             this.firstVehicle = new Vehicle("GA-08-A-1212", VehicleBrand.TOYOTA, VehicleColor.WHITE);
-            this.secondVehicle = new Vehicle("GA-08-A-2345", VehicleBrand.BMW, VehicleColor.WHITE);
-            this.thirdVehicle = new Vehicle("GA-08-A-2345", VehicleBrand.TOYOTA, VehicleColor.WHITE);
+            this.secondVehicle = new Vehicle("GA-08-A-2245", VehicleBrand.BMW, VehicleColor.WHITE);
+            this.thirdVehicle = new Vehicle("GA-08-A-2005", VehicleBrand.TOYOTA, VehicleColor.WHITE);
+            this.forthVehicle = new Vehicle("GA-08-A-2345", VehicleBrand.TOYOTA, VehicleColor.WHITE);
+            this.fifthVehicle = new Vehicle("GA-08-A-1245", VehicleBrand.TOYOTA, VehicleColor.WHITE);
             this.vehicle = new VehicleDetails(vehicleDetail, DriverType.NORMAL, VehicleSize.SMALL, "Parag");
             this.vehicleDetail = new Vehicle("GA-09-P-2365", VehicleBrand.TOYOTA, VehicleColor.BLUE);
             this.firstVehicleDetail = new VehicleDetails(firstVehicle, DriverType.NORMAL, VehicleSize.SMALL, "Parag");
-            this.secondVehicleDetail = new VehicleDetails(secondVehicle, DriverType.NORMAL, VehicleSize.SMALL, "Rishab");
+            this.secondVehicleDetail = new VehicleDetails(secondVehicle, DriverType.HANDICAPPED, VehicleSize.SMALL, "Rishab");
             this.thirdVehicleDetail = new VehicleDetails(thirdVehicle, DriverType.NORMAL, VehicleSize.LARGE, "Roshan");
+            this.forthVehicleDetail = new VehicleDetails(thirdVehicle, DriverType.HANDICAPPED, VehicleSize.LARGE, "Roshan");
+            this.fifthVehicleDetail = new VehicleDetails(thirdVehicle, DriverType.NORMAL, VehicleSize.LARGE, "Rishab");
             this.parkingLotSystem = new ParkingLotSystem(firstParkingLot, secondParkingLot, thirdParkingLot);
       }
 
@@ -398,6 +406,24 @@ public class ParkingLotTest {
                   Map<ParkingLot, List<String>> slotNumberBySizeAndDriverType =
                           parkingLotSystem.getSlotNumbersBySizeAndDriverType(DriverType.HANDICAPPED, VehicleSize.SMALL);
                   Assert.assertEquals(firstLotInformation, slotNumberBySizeAndDriverType.get(firstParkingLot));
+            } catch (ParkingLotException e) {
+                  e.printStackTrace();
+            }
+      }
+
+      @Test
+      public void givenARequestToGetSlotsOfAllParkedVehicles_WhenFound_ShouldReturnListOfSlotNumber() {
+            ArrayList<Integer> firstLot = new ArrayList<>(Arrays.asList(1, 2, 3));
+            ArrayList<Integer> secondLot = new ArrayList<>(Arrays.asList(1));
+            try {
+                  parkingLotSystem.park(firstVehicleDetail);
+                  parkingLotSystem.park(secondVehicleDetail);
+                  parkingLotSystem.park(thirdVehicleDetail);
+                  parkingLotSystem.park(forthVehicleDetail);
+                  Map<ParkingLot, List<Integer>> slotNumberList =
+                          parkingLotSystem.getAllVehiclesParkedInParkingAllLot();
+                  Assert.assertEquals(firstLot, slotNumberList.get(firstParkingLot));
+                  Assert.assertEquals(secondLot, slotNumberList.get(secondParkingLot));
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }

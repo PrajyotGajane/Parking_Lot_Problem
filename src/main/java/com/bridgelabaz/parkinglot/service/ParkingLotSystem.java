@@ -156,4 +156,15 @@ public class ParkingLotSystem {
             }
             return lotAndSlotNumbers;
       }
+
+      public Map<ParkingLot, List<Integer>> getAllVehiclesParkedInParkingAllLot() {
+            Map<ParkingLot, List<Integer>> lotAndSlotNumbers = new HashMap<>();
+            for (ParkingLot parkingLot : this.parkingLots) {
+                  List<Integer> slotNumbers = parkingLot.getAllVehiclesParkedInParkingLot();
+                  if (slotNumbers.size() > 0) {
+                        lotAndSlotNumbers.put(parkingLot, slotNumbers);
+                  }
+            }
+            return lotAndSlotNumbers;
+      }
 }
