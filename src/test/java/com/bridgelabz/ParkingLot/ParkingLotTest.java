@@ -16,6 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -366,13 +368,20 @@ public class ParkingLotTest {
       //UC--15
       @Test
       public void givenVehicles_WhenParked_ShouldReturnListOfParkedInLast30Minutes() {
+            List<Integer> expectedVehicleToBeInFirstLot = new ArrayList<>();
+            expectedVehicleToBeInFirstLot.add(1);
+            List<Integer> expectedVehicleToBeInSecondLot = new ArrayList<>();
+            expectedVehicleToBeInSecondLot.add(1);
+            Map<ParkingLot, List<Integer>> expectedBMWInParkingLot = new HashMap<ParkingLot, List<Integer>>() {{
+                  put(firstParkingLot, expectedVehicleToBeInFirstLot);
+                  put(secondParkingLot, expectedVehicleToBeInSecondLot);
+            }};
             try {
                   parkingLotSystem.park(firstVehicleDetail);
-                  parkingLotSystem.park(secondVehicleDetail);
+                  parkingLotSystem.park(thirdVehicleDetail);
                   Map<ParkingLot, List<Integer>> slotNumbersVehiclesByTime =
-                          parkingLotSystem.getVehiclesParkedFromTime(30);
-                  Assert.assertEquals(1, slotNumbersVehiclesByTime.get(firstParkingLot).get(0).intValue());
-                  Assert.assertEquals(1, slotNumbersVehiclesByTime.get(secondParkingLot).get(0).intValue());
+                          parkingLotSystem.getVehiclesParkedTime(30);
+                  Assert.assertEquals(expectedBMWInParkingLot, slotNumbersVehiclesByTime);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }
