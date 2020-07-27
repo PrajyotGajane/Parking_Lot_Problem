@@ -353,8 +353,8 @@ public class ParkingLotTest {
       //UC----14
       @Test
       public void givenBMWVehicle_WhenFound_ShouldReturnListOfSlotNumber() {
-            Vehicle vehicle = new Vehicle("GA-08-A-2456", VehicleBrand.BMW, VehicleColor.WHITE);
-            VehicleDetails vehicleDetails = new VehicleDetails(vehicle, DriverType.NORMAL, VehicleSize.LARGE, "Harsh");
+            Vehicle vehicleBMW = new Vehicle("GA-08-A-2456", VehicleBrand.BMW, VehicleColor.WHITE);
+            VehicleDetails vehicleBMWDetails = new VehicleDetails(vehicleBMW, DriverType.NORMAL, VehicleSize.LARGE, "Harsh");
             List<Integer> expectedVehicleToBeInFirstLot = new ArrayList<>();
             expectedVehicleToBeInFirstLot.add(1);
             List<Integer> expectedVehicleToBeInSecondLot = new ArrayList<>();
@@ -365,7 +365,7 @@ public class ParkingLotTest {
             }};
             try {
                   parkingLotSystem.park(secondVehicleDetail);
-                  parkingLotSystem.park(vehicleDetails);
+                  parkingLotSystem.park(vehicleBMWDetails);
                   Map<ParkingLot, List<Integer>> slotNumbersByCompany =
                           parkingLotSystem.getSlotNumbersOfVehiclesByBrand(VehicleBrand.BMW);
                   Assert.assertEquals(expectedBMWInParkingLot, slotNumbersByCompany);
