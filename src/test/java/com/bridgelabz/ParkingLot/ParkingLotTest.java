@@ -16,10 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ParkingLotTest {
 
@@ -57,8 +54,8 @@ public class ParkingLotTest {
             this.firstVehicleDetail = new VehicleDetails(firstVehicle, DriverType.NORMAL, VehicleSize.SMALL, "Parag");
             this.secondVehicleDetail = new VehicleDetails(secondVehicle, DriverType.HANDICAPPED, VehicleSize.SMALL, "Rishab");
             this.thirdVehicleDetail = new VehicleDetails(thirdVehicle, DriverType.NORMAL, VehicleSize.LARGE, "Roshan");
-            this.forthVehicleDetail = new VehicleDetails(thirdVehicle, DriverType.HANDICAPPED, VehicleSize.LARGE, "Roshan");
-            this.fifthVehicleDetail = new VehicleDetails(thirdVehicle, DriverType.NORMAL, VehicleSize.LARGE, "Rishab");
+            this.forthVehicleDetail = new VehicleDetails(forthVehicle, DriverType.HANDICAPPED, VehicleSize.LARGE, "Roshan");
+            this.fifthVehicleDetail = new VehicleDetails(fifthVehicle, DriverType.NORMAL, VehicleSize.LARGE, "Rishab");
             this.parkingLotSystem = new ParkingLotSystem(firstParkingLot, secondParkingLot, thirdParkingLot);
       }
 
@@ -343,6 +340,7 @@ public class ParkingLotTest {
             }
       }
 
+      //UC----13
       @Test
       public void givenBlueToyotaVehicle_WhenFound_ShouldReturnSlotDetails() {
             Vehicle vehicle = new Vehicle("GA-08-A-2456", VehicleBrand.TOYOTA, VehicleColor.BLUE);
@@ -415,7 +413,7 @@ public class ParkingLotTest {
       @Test
       public void givenAllParkedVehicles_WhenFound_ShouldReturnListOfSlotNumber() {
             ArrayList<Integer> firstLot = new ArrayList<>(Arrays.asList(1, 2, 3));
-            ArrayList<Integer> secondLot = new ArrayList<>(Arrays.asList(1));
+            ArrayList<Integer> secondLot = new ArrayList<>(Collections.singletonList(1));
             try {
                   parkingLotSystem.park(firstVehicleDetail);
                   parkingLotSystem.park(secondVehicleDetail);

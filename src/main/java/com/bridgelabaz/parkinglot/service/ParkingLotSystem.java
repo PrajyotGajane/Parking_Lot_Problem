@@ -80,7 +80,7 @@ public class ParkingLotSystem {
                     .orElseThrow(() -> new ParkingLotException("Parking Lot full", ParkingLotException.ExceptionType.PARKING_LOT_FULL));
       }
 
-      public static ParkingLot getLotForLargeVehicle(List<ParkingLot> parkingLots) throws ParkingLotException {
+      public ParkingLot getLotForLargeVehicle(List<ParkingLot> parkingLots) throws ParkingLotException {
             return parkingLots.stream()
                     .sorted(Comparator.comparing(parkingLot -> (parkingLot.getParkingCapacity() - parkingLot.getCountOfVehicles()),
                             Comparator.reverseOrder()))
@@ -136,9 +136,9 @@ public class ParkingLotSystem {
       public Map<ParkingLot, List<String>> getSlotNumbersBySizeAndDriverType(DriverType driverType, VehicleSize vehicleSize) {
             Map<ParkingLot, List<String>> lotAndSlotNumbers = new HashMap<>();
             for (ParkingLot parkingLot : this.parkingLots) {
-                  List<String> slotNumbers = parkingLot.getCompleteVehiclesList(driverType, vehicleSize);
-                  if (slotNumbers.size() > 0) {
-                        lotAndSlotNumbers.put(parkingLot, slotNumbers);
+                  List<String> slotDetails = parkingLot.getCompleteVehiclesList(driverType, vehicleSize);
+                  if (slotDetails.size() > 0) {
+                        lotAndSlotNumbers.put(parkingLot, slotDetails);
                   }
             }
             return lotAndSlotNumbers;

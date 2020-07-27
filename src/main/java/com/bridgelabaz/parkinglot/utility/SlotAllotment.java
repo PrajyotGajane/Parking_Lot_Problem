@@ -1,5 +1,7 @@
 package com.bridgelabaz.parkinglot.utility;
 
+import com.bridgelabaz.parkinglot.exception.ParkingLotException;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,8 +31,12 @@ public class SlotAllotment {
       }
 
       public Integer getNearestParkingSlot() {
-            Integer slot = this.availableParkingSlots.get(0);
-            this.availableParkingSlots.remove(0);
-            return slot;
+            try {
+                  Integer slot = this.availableParkingSlots.get(0);
+                  this.availableParkingSlots.remove(0);
+                  return slot;
+            } catch (IndexOutOfBoundsException e) {
+                  throw new ParkingLotException("Parking Full", ParkingLotException.ExceptionType.PARKING_LOT_FULL);
+            }
       }
 }
