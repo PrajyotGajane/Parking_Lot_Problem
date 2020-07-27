@@ -14,6 +14,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -317,10 +319,18 @@ public class ParkingLotTest {
       @Test
       public void givenVehiclesColour_WhenFound_ShouldReturnListOfWhitVehicleWithSlotNumber() {
             try {
+                  List<Integer> firstLotExpectedVehicles = new ArrayList<>();
+                  firstLotExpectedVehicles.add(1);
+                  List<Integer> secondLotExpectedVehicles = new ArrayList<>();
+                  secondLotExpectedVehicles.add(1);
+                  Map<ParkingLot, List<Integer>> expectedVehiclesInParkingLots = new HashMap<ParkingLot, List<Integer>>(){{
+                        put(firstParkingLot, firstLotExpectedVehicles);
+                        put(secondParkingLot,secondLotExpectedVehicles);
+                  }};
                   parkingLotSystem.park(firstVehicle);
                   parkingLotSystem.park(secondVehicle);
                   Map<ParkingLot, List<Integer>> slotNumberListOfVehiclesByColor = parkingLotSystem.getLotAndSlotListOfVehiclesByColor(VehicleColor.WHITE);
-                  Assert.assertEquals(1, slotNumberListOfVehiclesByColor.get(firstParkingLot).get(0).intValue());
+                  Assert.assertEquals(expectedVehiclesInParkingLots,slotNumberListOfVehiclesByColor);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }
