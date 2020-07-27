@@ -112,10 +112,10 @@ public class ParkingLotSystem {
             return vehicleByCompanyAndColour;
       }
 
-      public Map<ParkingLot, List<Integer>> getSlotNumbersOfVehiclesByCompany(VehicleBrand brand) {
+      public Map<ParkingLot, List<Integer>> getSlotNumbersOfVehiclesByBrand(VehicleBrand brand) {
             Map<ParkingLot, List<Integer>> vehicleByCompany = new HashMap<>();
             for (ParkingLot parkingLot : this.parkingLots) {
-                  List<Integer> slotNumbers = parkingLot.getSlotNumbersByCompany(brand);
+                  List<Integer> slotNumbers = parkingLot.getSlotNumbersByBrand(brand);
                   if (slotNumbers.size() > 0) {
                         vehicleByCompany.put(parkingLot, slotNumbers);
                   }

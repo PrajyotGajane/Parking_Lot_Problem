@@ -147,7 +147,7 @@ public class ParkingLot {
             return parkingAttendant;
       }
 
-      public List<Integer> getSlotNumbersByCompany(VehicleBrand brand) {
+      public List<Integer> getSlotNumbersByBrand(VehicleBrand brand) {
             List<Integer> slotNumbers = new ArrayList<>();
             for (Integer slotNumber : parkedVehicles.keySet()) {
                   if (parkedVehicles.get(slotNumber).getVehicle().getVehicle().getBrand().equals(brand)) {

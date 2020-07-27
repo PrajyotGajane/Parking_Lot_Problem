@@ -16,6 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -351,14 +353,22 @@ public class ParkingLotTest {
       //UC----14
       @Test
       public void givenBMWVehicle_WhenFound_ShouldReturnListOfSlotNumber() {
-            Vehicle vehicle = new Vehicle("MH04 AB 9999", VehicleBrand.BMW, VehicleColor.WHITE);
+            Vehicle vehicle = new Vehicle("GA-08-A-2456", VehicleBrand.BMW, VehicleColor.WHITE);
             VehicleDetails vehicleDetails = new VehicleDetails(vehicle, DriverType.NORMAL, VehicleSize.LARGE, "Harsh");
+            List<Integer> expectedVehicleToBeInFirstLot = new ArrayList<>();
+            expectedVehicleToBeInFirstLot.add(1);
+            List<Integer> expectedVehicleToBeInSecondLot = new ArrayList<>();
+            expectedVehicleToBeInSecondLot.add(1);
+            Map<ParkingLot, List<Integer>> expectedBMWInParkingLot = new HashMap<ParkingLot, List<Integer>>() {{
+                  put(firstParkingLot, expectedVehicleToBeInFirstLot);
+                  put(secondParkingLot, expectedVehicleToBeInSecondLot);
+            }};
             try {
                   parkingLotSystem.park(secondVehicleDetail);
                   parkingLotSystem.park(vehicleDetails);
                   Map<ParkingLot, List<Integer>> slotNumbersByCompany =
-                          parkingLotSystem.getSlotNumbersOfVehiclesByCompany(VehicleBrand.BMW);
-                  Assert.assertEquals(2, slotNumbersByCompany.size());
+                          parkingLotSystem.getSlotNumbersOfVehiclesByBrand(VehicleBrand.BMW);
+                  Assert.assertEquals(expectedBMWInParkingLot, slotNumbersByCompany);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }
