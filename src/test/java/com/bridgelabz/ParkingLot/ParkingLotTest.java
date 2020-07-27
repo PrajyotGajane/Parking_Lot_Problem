@@ -16,6 +16,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -335,15 +337,19 @@ public class ParkingLotTest {
 
       @Test
       public void givenBlueToyotaVehicle_WhenFound_ShouldReturnSlotDetails() {
-            Vehicle vehicle = new Vehicle("GA-08-A-2456", VehicleBrand.TOYOTA, VehicleColor.BLUE);
-            VehicleDetails vehicleDetails = new VehicleDetails(vehicle, DriverType.NORMAL, VehicleSize.LARGE, "Harsh");
+            Vehicle vehicleToyota = new Vehicle("GA-08-A-2456", VehicleBrand.TOYOTA, VehicleColor.BLUE);
+            VehicleDetails vehicleToyotaDetails = new VehicleDetails(vehicleToyota, DriverType.NORMAL, VehicleSize.LARGE, "Harsh");
+            List<String> secondLotInformation = new ArrayList<>();
+            secondLotInformation.add("GA-08-A-2456 Harsh");
+            Map<ParkingLot, List<String>> expectedVehiclesList = new HashMap<ParkingLot, List<String>>(){{
+                  put(secondParkingLot, secondLotInformation);
+            }};
             try {
-
                   parkingLotSystem.park(firstVehicleDetail);
-                  parkingLotSystem.park(vehicleDetails);
+                  parkingLotSystem.park(vehicleToyotaDetails);
                   Map<ParkingLot, List<String>> slotNumbersByCompanyAndColor =
-                          parkingLotSystem.getVehicleNumberAndAttendantName(VehicleBrand.TOYOTA, VehicleColor.BLUE);
-                  Assert.assertEquals("GA-08-A-2456 Harsh", slotNumbersByCompanyAndColor.get(secondParkingLot).get(0));
+                          parkingLotSystem.getVehicleBrandAndColor(VehicleBrand.TOYOTA, VehicleColor.BLUE);
+                  Assert.assertEquals(expectedVehiclesList, slotNumbersByCompanyAndColor);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }

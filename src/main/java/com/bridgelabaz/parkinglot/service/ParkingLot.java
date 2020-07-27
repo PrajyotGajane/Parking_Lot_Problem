@@ -135,7 +135,7 @@ public class ParkingLot {
             return slotNumbers;
       }
 
-      public List<String> getSlotNumbersByCompanyAndColour(VehicleBrand brand, VehicleColor color) {
+      public List<String> getSlotNumbersByBrandAndColor(VehicleBrand brand, VehicleColor color) {
             List<String> parkingAttendant = new ArrayList<>();
             for (Integer slotNumber : parkedVehicles.keySet()) {
                   if (parkedVehicles.get(slotNumber).getVehicle().getVehicle().getVehicleColour().equals(color) &&

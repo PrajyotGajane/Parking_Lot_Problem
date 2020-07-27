@@ -101,10 +101,10 @@ public class ParkingLotSystem {
             return vehiclesWithSpecificColor;
       }
 
-      public Map<ParkingLot, List<String>> getVehicleNumberAndAttendantName(VehicleBrand brand, VehicleColor color) {
+      public Map<ParkingLot, List<String>> getVehicleBrandAndColor(VehicleBrand brand, VehicleColor color) {
             Map<ParkingLot, List<String>> vehicleByCompanyAndColour = new HashMap<>();
             for (ParkingLot parkingLot : this.parkingLots) {
-                  List<String> slotNumbers = parkingLot.getSlotNumbersByCompanyAndColour(brand, color);
+                  List<String> slotNumbers = parkingLot.getSlotNumbersByBrandAndColor(brand, color);
                   if (slotNumbers.size() > 0) {
                         vehicleByCompanyAndColour.put(parkingLot, slotNumbers);
                   }
