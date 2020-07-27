@@ -16,10 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ParkingLotTest {
 
@@ -384,20 +381,23 @@ public class ParkingLotTest {
 
       //UC--16
       @Test
-      public void givenARequestToGetSlotsOfAllSmallHandicapped_WhenFound_ShouldReturnListOfSlotNumber() {
+      public void givenVehicles_WhenFoundHandicappedDriversWithSmallVehicleSize_ShouldReturnListOfSlotNumber() {
             VehicleDetails firstVehicleDetail = new VehicleDetails(firstVehicle, DriverType.HANDICAPPED,
                     VehicleSize.SMALL, "Harsh");
             VehicleDetails secondVehicleDetail = new VehicleDetails(secondVehicle, DriverType.HANDICAPPED,
                     VehicleSize.SMALL, "Prajyot");
-            ArrayList<String> firstLotInformation = new ArrayList<>(Arrays.asList(
+            List<String> firstLotInformation = new ArrayList<>(Arrays.asList(
                     "Slot: 1 Brand: TOYOTA Color:WHITE Size: SMALL Parking Attendant Name: Harsh",
                     "Slot: 2 Brand: BMW Color:WHITE Size: SMALL Parking Attendant Name: Prajyot"));
+            Map<ParkingLot, List<String>> expectedVehiclesList = new HashMap<ParkingLot, List<String>>(){{
+                  put(firstParkingLot, firstLotInformation);
+            }};
             try {
                   parkingLotSystem.park(firstVehicleDetail);
                   parkingLotSystem.park(secondVehicleDetail);
                   Map<ParkingLot, List<String>> slotNumberBySizeAndDriverType =
                           parkingLotSystem.getSlotNumbersBySizeAndDriverType(DriverType.HANDICAPPED, VehicleSize.SMALL);
-                  Assert.assertEquals(firstLotInformation, slotNumberBySizeAndDriverType.get(firstParkingLot));
+                  Assert.assertEquals(expectedVehiclesList, slotNumberBySizeAndDriverType);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }
