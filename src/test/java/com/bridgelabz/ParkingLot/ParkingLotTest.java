@@ -231,8 +231,8 @@ public class ParkingLotTest {
       public void givenSecondVehicles_WhenParkedInParkingSystem_ShouldDistributedEvenlyInParkingLots() {
             try {
                   parkingLotSystem.park(firstVehicleDetail);
-                  parkingLotSystem.park(secondVehicleDetail);
-                  ParkingLot parkingLot = parkingLotSystem.getParkingLotOfParkedVehicle(secondVehicleDetail);
+                  parkingLotSystem.park(thirdVehicleDetail);
+                  ParkingLot parkingLot = parkingLotSystem.getParkingLotOfParkedVehicle(thirdVehicleDetail);
                   Assert.assertEquals(secondParkingLot, parkingLot);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
@@ -312,7 +312,7 @@ public class ParkingLotTest {
                   parkingLotSystem.park(secondVehicleDetail);
                   parkingLotSystem.park(largeVehicle);
                   ParkingLot parkingLotWithMostFreeSpace = parkingLotSystem.getParkingLotOfParkedVehicle(largeVehicle);
-                  Assert.assertEquals(thirdParkingLot, parkingLotWithMostFreeSpace);
+                  Assert.assertEquals(secondParkingLot, parkingLotWithMostFreeSpace);
             } catch (ParkingLotException e) {
                   e.printStackTrace();
             }
@@ -352,7 +352,7 @@ public class ParkingLotTest {
                   parkingLotSystem.park(firstVehicleDetail);
                   parkingLotSystem.park(vehicleDetails);
                   Map<ParkingLot, List<String>> slotNumbersByCompanyAndColor =
-                          parkingLotSystem.getVehicleNumberAndAttendantName(VehicleBrand.TOYOTA, VehicleColor.BLUE);
+                          parkingLotSystem.getVehicleBrandAndColor(VehicleBrand.TOYOTA, VehicleColor.BLUE);
                   Assert.assertEquals("GA-08-A-2456 Harsh", slotNumbersByCompanyAndColor.get(secondParkingLot).get(0));
             } catch (ParkingLotException e) {
                   e.printStackTrace();
@@ -368,7 +368,7 @@ public class ParkingLotTest {
                   parkingLotSystem.park(secondVehicleDetail);
                   parkingLotSystem.park(vehicleDetails);
                   Map<ParkingLot, List<Integer>> slotNumbersByCompany =
-                          parkingLotSystem.getSlotNumbersOfVehiclesByCompany(VehicleBrand.BMW);
+                          parkingLotSystem.getSlotNumbersOfVehiclesByBrand(VehicleBrand.BMW);
                   Assert.assertEquals(2, slotNumbersByCompany.size());
             } catch (ParkingLotException e) {
                   e.printStackTrace();
@@ -380,9 +380,9 @@ public class ParkingLotTest {
       public void givenVehicles_WhenParked_ShouldReturnListOfParkedInLast30Minutes() {
             try {
                   parkingLotSystem.park(firstVehicleDetail);
-                  parkingLotSystem.park(secondVehicleDetail);
+                  parkingLotSystem.park(thirdVehicleDetail);
                   Map<ParkingLot, List<Integer>> slotNumbersVehiclesByTime =
-                          parkingLotSystem.getVehiclesParkedFromTime(30);
+                          parkingLotSystem.getVehiclesParkedTime(30);
                   Assert.assertEquals(1, slotNumbersVehiclesByTime.get(firstParkingLot).get(0).intValue());
                   Assert.assertEquals(1, slotNumbersVehiclesByTime.get(secondParkingLot).get(0).intValue());
             } catch (ParkingLotException e) {
@@ -390,7 +390,7 @@ public class ParkingLotTest {
             }
       }
 
-      //UC--16
+      //UC----16
       @Test
       public void givenARequestToGetSlotsOfAllSmallHandicapped_WhenFound_ShouldReturnListOfSlotNumber() {
             VehicleDetails firstVehicleDetail = new VehicleDetails(firstVehicle, DriverType.HANDICAPPED,
@@ -411,8 +411,9 @@ public class ParkingLotTest {
             }
       }
 
+      //UC----17
       @Test
-      public void givenARequestToGetSlotsOfAllParkedVehicles_WhenFound_ShouldReturnListOfSlotNumber() {
+      public void givenAllParkedVehicles_WhenFound_ShouldReturnListOfSlotNumber() {
             ArrayList<Integer> firstLot = new ArrayList<>(Arrays.asList(1, 2, 3));
             ArrayList<Integer> secondLot = new ArrayList<>(Arrays.asList(1));
             try {

@@ -15,10 +15,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ParkingLot {
-      public int parkingCapacity;
-      public SlotAllotment slotAllotment;
-      public HashMap<Integer, Slot> parkedVehicles;
-      public List<Observer> observers;
+      private final int parkingCapacity;
+      private final SlotAllotment slotAllotment;
+      private final HashMap<Integer, Slot> parkedVehicles;
+      private final List<Observer> observers;
 
       public ParkingLot(int parkingLotCapacity) {
             this.parkingCapacity = parkingLotCapacity;
@@ -175,17 +175,6 @@ public class ParkingLot {
             return LocalDateTime.now();
       }
 
-      public List<Integer> getSlotNumbersByVehicleSizeAndDriverType(DriverType driverType, VehicleSize vehicleSize) {
-            List<Integer> slotNumbers = new ArrayList<>();
-            for (Integer slotNumber : parkedVehicles.keySet()) {
-                  if (parkedVehicles.get(slotNumber).getVehicle().getVehicleSize() == vehicleSize &&
-                          parkedVehicles.get(slotNumber).getVehicle().getDriverType() == driverType) {
-                        slotNumbers.add(slotNumber);
-                  }
-            }
-            return slotNumbers;
-      }
-
       public List<String> getCompleteVehiclesList(DriverType driverType, VehicleSize vehicleSize) {
             return this.parkedVehicles.values()
                     .stream()
@@ -201,9 +190,7 @@ public class ParkingLot {
 
       public List<Integer> getAllVehiclesParkedInParkingLot() {
             List<Integer> slotNumbers = new ArrayList<>();
-            for (Integer slotNumber : parkedVehicles.keySet()) {
-                  slotNumbers.add(slotNumber);
-            }
+            slotNumbers.addAll(parkedVehicles.keySet());
             return slotNumbers;
       }
 }

@@ -5,12 +5,10 @@ import com.bridgelabaz.parkinglot.enums.VehicleBrand;
 import com.bridgelabaz.parkinglot.enums.VehicleColor;
 import com.bridgelabaz.parkinglot.enums.VehicleSize;
 import com.bridgelabaz.parkinglot.exception.ParkingLotException;
-import com.bridgelabaz.parkinglot.models.Slot;
 import com.bridgelabaz.parkinglot.models.VehicleDetails;
 
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class ParkingLotSystem {
       public ArrayList<ParkingLot> parkingLots;
@@ -79,7 +77,7 @@ public class ParkingLotSystem {
             return parkingLots.stream()
                     .filter(parkingLot -> parkingLot.getCountOfVehicles() != parkingLot.getParkingCapacity())
                     .findFirst()
-                    .orElseThrow(() -> new ParkingLotException("Parking Full", ParkingLotException.ExceptionType.PARKING_LOT_FULL));
+                    .orElseThrow(() -> new ParkingLotException("Parking Lot full", ParkingLotException.ExceptionType.PARKING_LOT_FULL));
       }
 
       public static ParkingLot getLotForLargeVehicle(List<ParkingLot> parkingLots) throws ParkingLotException {
@@ -88,7 +86,7 @@ public class ParkingLotSystem {
                             Comparator.reverseOrder()))
                     .filter(parkingLot -> parkingLot.getCountOfVehicles() != parkingLot.getParkingCapacity())
                     .findFirst()
-                    .orElseThrow(() -> new ParkingLotException("Parking Full", ParkingLotException.ExceptionType.PARKING_LOT_FULL));
+                    .orElseThrow(() -> new ParkingLotException("Parking Lot full", ParkingLotException.ExceptionType.PARKING_LOT_FULL));
       }
 
       public Map<ParkingLot, List<Integer>> getLotAndSlotListOfVehiclesByColor(VehicleColor vehicleColour) {
@@ -102,7 +100,7 @@ public class ParkingLotSystem {
             return vehiclesWithSpecificColor;
       }
 
-      public Map<ParkingLot, List<String>> getVehicleNumberAndAttendantName(VehicleBrand brand, VehicleColor color) {
+      public Map<ParkingLot, List<String>> getVehicleBrandAndColor(VehicleBrand brand, VehicleColor color) {
             Map<ParkingLot, List<String>> vehicleByCompanyAndColour = new HashMap<>();
             for (ParkingLot parkingLot : this.parkingLots) {
                   List<String> slotNumbers = parkingLot.getSlotNumbersByCompanyAndColour(brand, color);
@@ -113,7 +111,7 @@ public class ParkingLotSystem {
             return vehicleByCompanyAndColour;
       }
 
-      public Map<ParkingLot, List<Integer>> getSlotNumbersOfVehiclesByCompany(VehicleBrand brand) {
+      public Map<ParkingLot, List<Integer>> getSlotNumbersOfVehiclesByBrand(VehicleBrand brand) {
             Map<ParkingLot, List<Integer>> vehicleByCompany = new HashMap<>();
             for (ParkingLot parkingLot : this.parkingLots) {
                   List<Integer> slotNumbers = parkingLot.getSlotNumbersByCompany(brand);
@@ -124,7 +122,7 @@ public class ParkingLotSystem {
             return vehicleByCompany;
       }
 
-      public Map<ParkingLot, List<Integer>> getVehiclesParkedFromTime(int time) {
+      public Map<ParkingLot, List<Integer>> getVehiclesParkedTime(int time) {
             Map<ParkingLot, List<Integer>> slotNumbersByTime = new HashMap<>();
             for (ParkingLot parkingLot : this.parkingLots) {
                   List<Integer> slotNumbers = parkingLot.getVehiclesParkedFromTime(time);
@@ -133,17 +131,6 @@ public class ParkingLotSystem {
                   }
             }
             return slotNumbersByTime;
-      }
-
-      public Map<ParkingLot, List<Integer>> getSlotNumbersByVehicleSizeAndDriverType(DriverType driverType, VehicleSize vehicleSize) {
-            Map<ParkingLot, List<Integer>> lotAndSlotNumbers = new HashMap<>();
-            for (ParkingLot parkingLot : this.parkingLots) {
-                  List<Integer> slotNumbers = parkingLot.getSlotNumbersByVehicleSizeAndDriverType(driverType, vehicleSize);
-                  if (slotNumbers.size() > 0) {
-                        lotAndSlotNumbers.put(parkingLot, slotNumbers);
-                  }
-            }
-            return lotAndSlotNumbers;
       }
 
       public Map<ParkingLot, List<String>> getSlotNumbersBySizeAndDriverType(DriverType driverType, VehicleSize vehicleSize) {
