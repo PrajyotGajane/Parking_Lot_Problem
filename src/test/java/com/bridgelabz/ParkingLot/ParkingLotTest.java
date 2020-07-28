@@ -343,7 +343,7 @@ public class ParkingLotTest {
             try {
                   parkingLotSystem.park(firstVehicleDetail);
                   parkingLotSystem.park(secondVehicleDetail);//Handicapped Vehicle
-                  parkingLotSystem.park(thirdVehicleDetail);
+                  parkingLotSystem.park(thirdVehicleDetail);//Large
                   parkingLotSystem.park(forthVehicleDetail);
                   Map<ParkingLot, List<Integer>> slotNumberListOfVehiclesByColor = parkingLotSystem.getLotAndSlotListOfVehiclesByColor(VehicleColor.WHITE);
                   Assert.assertEquals(expectedVehiclesInParkingLots, slotNumberListOfVehiclesByColor);
