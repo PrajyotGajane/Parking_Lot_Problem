@@ -44,7 +44,7 @@ public class ParkingLot {
       public boolean isVehiclePresent(VehicleDetails vehicle) {
             return parkedVehicles.entrySet()
                     .stream()
-                    .anyMatch(entry -> vehicle.equals(entry.getValue().getVehicle()));
+                    .anyMatch(entry -> vehicle.equals(entry.getValue().getDetailsVehicle()));
 
       }
 
@@ -76,7 +76,7 @@ public class ParkingLot {
       public Integer getSlot(VehicleDetails vehicle) {
             Integer slot = -1;
             for (Map.Entry<Integer, Slot> entry : parkedVehicles.entrySet()) {
-                  if (vehicle.equals(entry.getValue().getVehicle())) {
+                  if (vehicle.equals(entry.getValue().getDetailsVehicle())) {
                         slot = entry.getKey();
                         slotAllotment.unParkUpdate(slot);
                   }
@@ -87,7 +87,7 @@ public class ParkingLot {
       public Integer getPositionOfVehicle(VehicleDetails vehicle) {
             Integer slot = -1;
             for (Map.Entry<Integer, Slot> entry : parkedVehicles.entrySet()) {
-                  if (vehicle.equals(entry.getValue().getVehicle())) {
+                  if (vehicle.equals(entry.getValue().getDetailsVehicle())) {
                         slot = entry.getKey();
                   }
             }
@@ -97,7 +97,7 @@ public class ParkingLot {
       public Integer findVehicle(VehicleDetails vehicle) {
             int slot = -1;
             for (Map.Entry<Integer, Slot> entry : parkedVehicles.entrySet()) {
-                  if (vehicle.equals(entry.getValue().getVehicle())) {
+                  if (vehicle.equals(entry.getValue().getDetailsVehicle())) {
                         slot = entry.getKey();
                         this.unParkVehicle(vehicle);
                   }
@@ -132,29 +132,32 @@ public class ParkingLot {
       public List<Integer> getListOfSlotsByColour(VehicleColor vehicleColour) {
             List<Integer> slotNumbers = new ArrayList<>();
             for (Integer slotNumber : parkedVehicles.keySet()) {
-                  if (parkedVehicles.get(slotNumber).getVehicle().getVehicle().getVehicleColour().equals(vehicleColour)) {
+                  if (parkedVehicles.get(slotNumber).getDetailsVehicle().getVehicle().getVehicleColour().equals(vehicleColour)) {
                         slotNumbers.add(slotNumber);
                   }
             }
             return slotNumbers;
       }
 
-      public List<String> getSlotNumbersByCompanyAndColour(VehicleBrand brand, VehicleColor color) {
+      public List<String> getSlotNumbersByCompanyAndColour(VehicleBrand vehicleBrand, VehicleColor color) {
             List<String> parkingAttendant = new ArrayList<>();
             for (Integer slotNumber : parkedVehicles.keySet()) {
-                  if (parkedVehicles.get(slotNumber).getVehicle().getVehicle().getVehicleColour().equals(color) &&
-                          parkedVehicles.get(slotNumber).getVehicle().getVehicle().getBrand().equals(brand)) {
-                        parkingAttendant.add(parkedVehicles.get(slotNumber).getVehicle().getVehicle().getVehicleNumber() +
-                                " " + parkedVehicles.get(slotNumber).getVehicle().getParkingAttendant());
+                  if (parkedVehicles.get(slotNumber).getDetailsVehicle().getVehicle().getVehicleColour().equals(color) &&
+                          parkedVehicles.get(slotNumber).getDetailsVehicle().getVehicle().getVehicleBrand().equals(vehicleBrand)) {
+                        parkingAttendant.add(parkedVehicles.get(slotNumber).getDetailsVehicle().getVehicle().getVehicleNumber() +
+                                " " + parkedVehicles.get(slotNumber).getDetailsVehicle().getParkingAttendant());
                   }
             }
+
+            if (parkingAttendant == null)
+                  throw new ParkingLotException("Vehicle not found", ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT);
             return parkingAttendant;
       }
 
       public List<Integer> getSlotNumbersByCompany(VehicleBrand brand) {
             List<Integer> slotNumbers = new ArrayList<>();
             for (Integer slotNumber : parkedVehicles.keySet()) {
-                  if (parkedVehicles.get(slotNumber).getVehicle().getVehicle().getBrand().equals(brand)) {
+                  if (parkedVehicles.get(slotNumber).getDetailsVehicle().getVehicle().getVehicleBrand().equals(brand)) {
                         slotNumbers.add(slotNumber);
                   }
             }
@@ -178,13 +181,13 @@ public class ParkingLot {
       public List<String> getCompleteVehiclesList(DriverType driverType, VehicleSize vehicleSize) {
             return this.parkedVehicles.values()
                     .stream()
-                    .filter(parkingSlot -> parkingSlot.getVehicle().getDriverType() == driverType)
-                    .filter(parkingSlot -> parkingSlot.getVehicle().getVehicleSize() == vehicleSize)
+                    .filter(parkingSlot -> parkingSlot.getDetailsVehicle().getDriverType() == driverType)
+                    .filter(parkingSlot -> parkingSlot.getDetailsVehicle().getVehicleSize() == vehicleSize)
                     .map(parkingSlot -> (("Slot: "+parkingSlot.getSlotNumber() + " Brand: "
-                            + parkingSlot.getVehicle().getVehicle().getBrand()) + " Color:"
-                            + (parkingSlot.getVehicle().getVehicle().getVehicleColour()) + " Size: "
-                            + (parkingSlot.getVehicle().getVehicleSize()) + " Parking Attendant Name: "
-                            + (parkingSlot.getVehicle().getParkingAttendant())))
+                            + parkingSlot.getDetailsVehicle().getVehicle().getVehicleBrand()) + " Color:"
+                            + (parkingSlot.getDetailsVehicle().getVehicle().getVehicleColour()) + " Size: "
+                            + (parkingSlot.getDetailsVehicle().getVehicleSize()) + " Parking Attendant Name: "
+                            + (parkingSlot.getDetailsVehicle().getParkingAttendant())))
                     .collect(Collectors.toList());
       }
 

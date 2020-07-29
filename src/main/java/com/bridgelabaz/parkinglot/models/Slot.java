@@ -17,7 +17,7 @@ public class Slot {
             return time;
       }
 
-      public VehicleDetails getVehicle() {
+      public VehicleDetails getDetailsVehicle() {
             return vehicle;
       }
 

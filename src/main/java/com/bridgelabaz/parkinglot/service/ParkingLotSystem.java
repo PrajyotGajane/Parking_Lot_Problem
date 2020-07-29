@@ -100,14 +100,16 @@ public class ParkingLotSystem {
             return vehiclesWithSpecificColor;
       }
 
-      public Map<ParkingLot, List<String>> getVehicleBrandAndColor(VehicleBrand brand, VehicleColor color) {
+      public Map<ParkingLot, List<String>> getVehicleBrandAndColor(VehicleBrand vehicleBrand, VehicleColor color) {
             Map<ParkingLot, List<String>> vehicleByCompanyAndColour = new HashMap<>();
             for (ParkingLot parkingLot : this.parkingLots) {
-                  List<String> slotNumbers = parkingLot.getSlotNumbersByCompanyAndColour(brand, color);
+                  List<String> slotNumbers = parkingLot.getSlotNumbersByCompanyAndColour(vehicleBrand, color);
                   if (slotNumbers.size() > 0) {
                         vehicleByCompanyAndColour.put(parkingLot, slotNumbers);
                   }
             }
+            if (vehicleByCompanyAndColour.size() == 0)
+                  throw new ParkingLotException("Vehicle not found", ParkingLotException.ExceptionType.VEHICLE_NOT_PRESENT);
             return vehicleByCompanyAndColour;
       }
 

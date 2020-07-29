@@ -7,12 +7,12 @@ import java.util.Objects;
 
 public class Vehicle {
       private final String vehicleNumber;
-      private final VehicleBrand brand;
+      private final VehicleBrand vehicleBrand;
       private final VehicleColor vehicleColor;
 
-      public Vehicle(String vehicleNumber, VehicleBrand brand, VehicleColor vehicleColor) {
+      public Vehicle(String vehicleNumber, VehicleBrand vehicleBrand, VehicleColor vehicleColor) {
             this.vehicleNumber = vehicleNumber;
-            this.brand = brand;
+            this.vehicleBrand = vehicleBrand;
             this.vehicleColor = vehicleColor;
       }
 
@@ -20,8 +20,8 @@ public class Vehicle {
             return vehicleNumber;
       }
 
-      public VehicleBrand getBrand() {
-            return brand;
+      public VehicleBrand getVehicleBrand() {
+            return vehicleBrand;
       }
 
       public VehicleColor getVehicleColour() {
@@ -34,12 +34,12 @@ public class Vehicle {
             if (o == null || getClass() != o.getClass()) return false;
             Vehicle vehicle = (Vehicle) o;
             return Objects.equals(vehicleNumber, vehicle.vehicleNumber) &&
-                    brand == vehicle.brand &&
+                    vehicleBrand == vehicle.vehicleBrand &&
                     vehicleColor == vehicle.vehicleColor;
       }
 
       @Override
       public int hashCode() {
-            return Objects.hash(vehicleNumber, brand, vehicleColor);
+            return Objects.hash(vehicleNumber, vehicleBrand, vehicleColor);
       }
 }
